@@ -1,2 +1,2 @@
 # tokenizr.net
-Pet project for tokenization of strings for security in apps.
+C# project for tokenization of strings for security in apps.
