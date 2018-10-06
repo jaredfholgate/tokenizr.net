@@ -6,50 +6,37 @@ namespace tokenizr.net.service
 {
   public class BasicService
   {
-    public string Tokenize(string textToTokenize, TokenTableSet table)
+    public string Tokenize(string source, TokenTableSet table)
     {
-      var tokenizedString = new StringBuilder();
-
-      var columnIndex = 0;
-
-      foreach(var character in textToTokenize)
-      {
-        if (table.ForwardTable[columnIndex].ContainsKey(character))
-        {
-          var newCharacter = table.ForwardTable[columnIndex][character];
-          tokenizedString.Append(newCharacter.Item1);
-          columnIndex = newCharacter.Item2;
-        }
-        else
-        {
-          tokenizedString.Append(character);
-        }
-      }
-
-      return tokenizedString.ToString();
+      return Encode(source, table.ForwardTable);
     }
 
-    public string Detokenize(string textToTokenize, TokenTableSet table)
+    public string Detokenize(string source, TokenTableSet table)
     {
-      var tokenizedString = new StringBuilder();
+      return Encode(source, table.ReverseTable);
+    }
+
+    private string Encode(string source, TokenTable table)
+    {
+      var result = new StringBuilder();
 
       var columnIndex = 0;
 
-      foreach (var character in textToTokenize)
+      foreach (var character in source)
       {
-        if (table.ReverseTable[columnIndex].ContainsKey(character))
+        if (table[columnIndex].ContainsKey(character))
         {
-          var newCharacter = table.ReverseTable[columnIndex][character];
-          tokenizedString.Append(newCharacter.Item1);
+          var newCharacter = table[columnIndex][character];
+          result.Append(newCharacter.Item1);
           columnIndex = newCharacter.Item2;
         }
         else
         {
-          tokenizedString.Append(character);
+          result.Append(character);
         }
       }
 
-      return tokenizedString.ToString();
+      return result.ToString();
     }
   }
 }
