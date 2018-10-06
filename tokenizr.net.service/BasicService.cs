@@ -13,17 +13,21 @@ namespace tokenizr.net.service
       _settings = settings;
     }
 
-    public string Tokenize(string source, TokenTableSet table)
+    public BasicResult Tokenize(string source, TokenTableSet table)
     {
-      return Encode(source, table.ForwardTable);
+      var result = Encode(source, table.ForwardTable);
+      result.Action = "Tokenize";
+      return result;
     }
 
-    public string Detokenize(string source, TokenTableSet table)
+    public BasicResult Detokenize(string source, TokenTableSet table)
     {
-      return Encode(source, table.ReverseTable);
+      var result = Encode(source, table.ReverseTable);
+      result.Action = "Detokenize";
+      return result;
     }
 
-    private string Encode(string source, TokenTable table)
+    private BasicResult Encode(string source, TokenTable table)
     {
       var result = new StringBuilder();
 
@@ -38,6 +42,8 @@ namespace tokenizr.net.service
         }
       }
 
+      var replacedCount = 0;
+
       foreach (var character in source)
       {
         if (table[columnIndex].ContainsKey(character))
@@ -45,6 +51,7 @@ namespace tokenizr.net.service
           var newCharacter = table[columnIndex][character];
           result.Append(newCharacter.Item1);
           columnIndex = newCharacter.Item2;
+          replacedCount++;
         }
         else
         {
@@ -52,7 +59,9 @@ namespace tokenizr.net.service
         }
       }
 
-      return result.ToString();
+      var percentReplaced = ((double)replacedCount / source.Length) * 100;
+
+      return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentageReplaced = percentReplaced };
     }
   }
 }
