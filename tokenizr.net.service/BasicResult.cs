@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace tokenizr.net.service
+﻿namespace tokenizr.net.service
 {
   public class BasicResult
   {
@@ -10,7 +6,7 @@ namespace tokenizr.net.service
 
     public bool AllTextReplaced { get; set; }
 
-    public double PercentageReplaced { get; set; }
+    public double PercentReplaced { get; set; }
 
     public string Value { get; set; }
   }

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.service.unitte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net", "tokenizr.net\tokenizr.net.csproj", "{C14467F5-5FE7-426E-BD90-789B9226EFA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.constants", "tokenizr.net.constants\tokenizr.net.constants.csproj", "{BEC8B277-515C-489A-90E7-ADA7947CE144}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{C14467F5-5FE7-426E-BD90-789B9226EFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C14467F5-5FE7-426E-BD90-789B9226EFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C14467F5-5FE7-426E-BD90-789B9226EFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC8B277-515C-489A-90E7-ADA7947CE144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC8B277-515C-489A-90E7-ADA7947CE144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC8B277-515C-489A-90E7-ADA7947CE144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC8B277-515C-489A-90E7-ADA7947CE144}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using tokenizr.net.constants;
 using tokenizr.net.generator;
 using tokenizr.net.structures;
 
@@ -7,7 +8,6 @@ namespace tokenizr.net.service.unittests
   [TestClass]
   public class BasicServiceTests
   {
-    private const string Alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private const int Size = 2048;
     private const string TestString1 = "Hello, this is a test string.";
     private readonly string TestString2 = $"{TestString1} Test 2.";
@@ -19,7 +19,7 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void CanTokeniseABasicString()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var resultString = service.Tokenize(TestString1, tokenTable).Value;
       Assert.AreEqual(TestString1.Length, resultString.Length);
@@ -29,21 +29,21 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void CanDeTokeniseABasicStringInNonConsistentModeAndActionTypeIsCorrect()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var result = service.Tokenize(TestString1, tokenTable);
-      Assert.AreEqual("Tokenize", result.Action);
+      Assert.AreEqual(ActionType.Tokenize, result.Action);
       var resultString = result.Value;
       result = service.Detokenize(resultString, tokenTable);
       resultString = result.Value;
-      Assert.AreEqual("Detokenize", result.Action);
+      Assert.AreEqual(ActionType.Detokenize, result.Action);
       Assert.AreEqual(TestString1, resultString);
     }
 
     [TestMethod]
     public void CanDeTokeniseABasicStringInConsistentMode()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings{ Consistent = true });
       var resultString = service.Tokenize(TestString1, tokenTable).Value;
       resultString = service.Detokenize(resultString, tokenTable).Value;
@@ -53,7 +53,7 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void StartOfStringIsConsistentWhenInConsistentMode()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings { Consistent = true });
 
       var resultString1 = service.Tokenize(TestString1, tokenTable).Value;
@@ -68,7 +68,7 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void StartOfStringIsNotConsistentWhenNotInConsistentMode()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
 
       var resultString1 = service.Tokenize(TestString1, tokenTable).Value;
@@ -83,7 +83,7 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void CanHandleStringsLongerThanArrayLength()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var testString = TestString1;
       while(testString.Length < tokenTable.ForwardTable.Count)
@@ -98,12 +98,12 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void DifferentTablesGenerateDifferentResults()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
 
       var resultString1 = service.Tokenize(TestString1, tokenTable).Value;
 
-      tokenTable = GenerateTable(Size, Alphabet);
+      tokenTable = GenerateTable(Size, Alphabet.English);
       var resultString2 = service.Tokenize(TestString1, tokenTable).Value;
         
       Assert.AreNotEqual(resultString1, resultString2);
@@ -112,7 +112,7 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void FlagIndicatesWhenFullyReplaced()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var result = service.Tokenize(TestStringAllReplaced, tokenTable);
       Assert.IsTrue(result.AllTextReplaced);
@@ -121,7 +121,7 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void FlagIndicatesWhenNotFullyReplaced()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var result = service.Tokenize(TestString1, tokenTable);
       Assert.IsFalse(result.AllTextReplaced);
@@ -130,28 +130,28 @@ namespace tokenizr.net.service.unittests
     [TestMethod]
     public void PercentageIs100WhenFullyReplaced()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var result = service.Tokenize(TestStringAllReplaced, tokenTable);
-      Assert.AreEqual(100, result.PercentageReplaced);
+      Assert.AreEqual(100, result.PercentReplaced);
     }
 
     [TestMethod]
     public void PercentageIs50WhenHalfNotFullyReplaced()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var result = service.Tokenize(TestStringHalfReplaced, tokenTable);
-      Assert.AreEqual(50, result.PercentageReplaced);
+      Assert.AreEqual(50, result.PercentReplaced);
     }
 
     [TestMethod]
     public void PercentageIs0WhenNoneReplaced()
     {
-      var tokenTable = GenerateTable(Size, Alphabet);
+      var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new Settings());
       var result = service.Tokenize(TestStringNoneReplaced, tokenTable);
-      Assert.AreEqual(0, result.PercentageReplaced);
+      Assert.AreEqual(0, result.PercentReplaced);
     }
 
     private TokenTableSet GenerateTable(int size, string alphabet)

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
+using tokenizr.net.constants;
 using tokenizr.net.structures;
 
 namespace tokenizr.net.service
@@ -16,14 +16,14 @@ namespace tokenizr.net.service
     public BasicResult Tokenize(string source, TokenTableSet table)
     {
       var result = Encode(source, table.ForwardTable);
-      result.Action = "Tokenize";
+      result.Action = ActionType.Tokenize;
       return result;
     }
 
     public BasicResult Detokenize(string source, TokenTableSet table)
     {
       var result = Encode(source, table.ReverseTable);
-      result.Action = "Detokenize";
+      result.Action = ActionType.Detokenize;
       return result;
     }
 
@@ -61,7 +61,7 @@ namespace tokenizr.net.service
 
       var percentReplaced = ((double)replacedCount / source.Length) * 100;
 
-      return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentageReplaced = percentReplaced };
+      return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentReplaced = percentReplaced };
     }
   }
 }
