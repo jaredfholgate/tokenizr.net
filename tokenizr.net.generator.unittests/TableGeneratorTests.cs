@@ -7,33 +7,67 @@ namespace tokenizr.net.generator.unittests
   [TestClass]
   public class TableGeneratorTests
   {
-    private const int Size = 2048;
+    private const int Size2048 = 2048;
 
     [TestMethod]
-    public void CreateABasicTableWithALengthOf2048AndEnglishLetters()
+    public void CanCreateABasicTableWithALengthOf2048AndEnglishLetters()
     {
-      var table = GenerateTable(Size, Alphabet.English).ForwardTable;
-      Assert.AreEqual(Size, table.Count);
+      var table = GenerateTable(Size2048, Alphabet.English).ForwardTable;
+      Assert.AreEqual(Size2048, table.Count);
       Assert.AreEqual(Alphabet.English.Length, table[0].Count);
 
-      for (var i = 0; i < Size; i++)
+      for (var i = 0; i < Size2048; i++)
       {
         foreach (var character in Alphabet.English)
         {
           Assert.IsTrue(table[i].ContainsKey(character));
-          Assert.IsTrue(table[i][character].Item2 >= 0 && table[i][character].Item2 <= Size - 1);
+          Assert.IsTrue(table[i][character].Item2 >= 0 && table[i][character].Item2 <= Size2048 - 1);
         }
       }
     }
 
     [TestMethod]
-    public void CreateAForwardAndReverseTableWithALengthOf2048AndEnglishLetters()
+    public void CanCreateABasicTableWithALengthOf2048AndEnglishWithPunctuationAndSpecialCharacters()
     {
-      var table = GenerateTable(Size, Alphabet.English);
-      Assert.AreEqual(Size, table.ForwardTable.Count);
-      Assert.AreEqual(Size, table.ReverseTable.Count);
+      var table = GenerateTable(Size2048, Alphabet.EnglishWithPunctuationAndSpecialCharacters).ForwardTable;
+      Assert.AreEqual(Size2048, table.Count);
+      Assert.AreEqual(Alphabet.EnglishWithPunctuationAndSpecialCharacters.Length, table[0].Count);
 
-      for (var i = 0; i < Size; i++)
+      for (var i = 0; i < Size2048; i++)
+      {
+        foreach (var character in Alphabet.EnglishWithPunctuationAndSpecialCharacters)
+        {
+          Assert.IsTrue(table[i].ContainsKey(character));
+          Assert.IsTrue(table[i][character].Item2 >= 0 && table[i][character].Item2 <= Size2048 - 1);
+        }
+      }
+    }
+
+    [TestMethod]
+    public void CanCreateABasicTableWithALengthOf2048AndEnglishWithPunctuationAndSpecialCharactersAndSpaces()
+    {
+      var table = GenerateTable(Size2048, Alphabet.EnglishWithPunctuationAndSpecialCharacters).ForwardTable;
+      Assert.AreEqual(Size2048, table.Count);
+      Assert.AreEqual(Alphabet.EnglishWithPunctuationAndSpecialCharacters.Length, table[0].Count);
+
+      for (var i = 0; i < Size2048; i++)
+      {
+        foreach (var character in Alphabet.EnglishWithPunctuationAndSpecialCharacters)
+        {
+          Assert.IsTrue(table[i].ContainsKey(character));
+          Assert.IsTrue(table[i][character].Item2 >= 0 && table[i][character].Item2 <= Size2048 - 1);
+        }
+      }
+    }
+
+    [TestMethod]
+    public void CanCreateAForwardAndReverseTableWithALengthOf2048AndEnglishLetters()
+    {
+      var table = GenerateTable(Size2048, Alphabet.English);
+      Assert.AreEqual(Size2048, table.ForwardTable.Count);
+      Assert.AreEqual(Size2048, table.ReverseTable.Count);
+
+      for (var i = 0; i < Size2048; i++)
       {
         foreach (var character in Alphabet.English)
         {
@@ -45,8 +79,8 @@ namespace tokenizr.net.generator.unittests
 
     private TokenTableSet GenerateTable(int size, string alphabet)
     {
-      var generator = new TableGenerator();
-      return generator.Generate(size, alphabet);
+      var generator = new TableGenerator(new GeneratorSettings { Size = size, Alphabet = alphabet });
+      return generator.Generate();
     }
   }
 }

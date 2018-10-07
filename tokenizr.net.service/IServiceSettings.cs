@@ -1,6 +1,6 @@
 ﻿namespace tokenizr.net.service
 {
-  public interface ISettings
+  public interface IServiceSettings
   {
     bool Consistent { get; set; }
   }

@@ -6,9 +6,9 @@ namespace tokenizr.net.service
 {
   public class BasicService
   {
-    private readonly ISettings _settings;
+    private readonly IServiceSettings _settings;
 
-    public BasicService(ISettings settings)
+    public BasicService(IServiceSettings settings)
     {
       _settings = settings;
     }
@@ -29,6 +29,10 @@ namespace tokenizr.net.service
 
     private BasicResult Encode(string source, TokenTable table)
     {
+      if(string.IsNullOrEmpty(source))
+      {
+        return new BasicResult { Value = string.Empty, PercentReplaced = -1, AllTextReplaced = false };
+      }
       var result = new StringBuilder();
 
       var columnIndex = 0;

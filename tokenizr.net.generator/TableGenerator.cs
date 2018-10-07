@@ -7,15 +7,22 @@ namespace tokenizr.net.generator
 {
   public class TableGenerator
   {
-    public TokenTableSet Generate(int size, string alphabet)
+    private readonly IGeneratorSettings _settings;
+
+    public TableGenerator(IGeneratorSettings settings)
+    {
+      _settings = settings;
+    }
+
+    public TokenTableSet Generate()
     {
       var tableSet = new TokenTableSet();
       var forwardTable = new TokenTable();
       var reverseTable = new TokenTable();
 
-      for (var i = 0; i <size; i++)
+      for (var i = 0; i <_settings.Size; i++)
       {
-        GenerateRandomColumn(size, alphabet, forwardTable, reverseTable);
+        GenerateRandomColumn(_settings.Size, _settings.Alphabet, forwardTable, reverseTable);
       }
 
       tableSet.ForwardTable = forwardTable;
