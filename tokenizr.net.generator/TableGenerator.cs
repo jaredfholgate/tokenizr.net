@@ -2,6 +2,7 @@
 using tokenizr.net.structures;
 using System.Collections.Generic;
 using System.Linq;
+using tokenizr.net.constants;
 
 namespace tokenizr.net.generator
 {
@@ -19,10 +20,11 @@ namespace tokenizr.net.generator
       var tableSet = new TokenTableSet();
       var forwardTable = new TokenTable();
       var reverseTable = new TokenTable();
+      var alphabet = _settings.Alphabet + (_settings.IncludeSpaces ? Characters.Space : string.Empty) + (_settings.IncludePunctuation ? Characters.Punctuation : string.Empty ) + (_settings.IncludeSpecialCharacters ? Characters.SpecialCharacters : string.Empty);
 
       for (var i = 0; i <_settings.Size; i++)
       {
-        GenerateRandomColumn(_settings.Size, _settings.Alphabet, forwardTable, reverseTable);
+        GenerateRandomColumn(_settings.Size, alphabet, forwardTable, reverseTable);
       }
 
       tableSet.ForwardTable = forwardTable;
