@@ -81,6 +81,25 @@ namespace tokenizr.net.generator.unittests
       }
     }
 
+
+    [TestMethod]
+    public void CanCreateAForwardAndReverseTableWithALengthOf2048AndNumbers()
+    {
+      var table = GenerateTable(Size2048, Alphabet.Numbers, false, false, false);
+      Assert.AreEqual(Size2048, table.ForwardTable.Count);
+      Assert.AreEqual(Size2048, table.ReverseTable.Count);
+
+      for (var i = 0; i < Size2048; i++)
+      {
+        foreach (var character in Alphabet.Numbers)
+        {
+          Assert.IsTrue(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item1 == character);
+          Assert.AreEqual(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item2, table.ForwardTable[i][character].Item2);
+          Assert.IsTrue(char.IsDigit(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item1));
+        }
+      }
+    }
+
     private TokenTableSet GenerateTable(int size, string alphabet, bool includeSpaces, bool includePunctuation, bool includeSpecialCharacters)
     {
       var generator = new TableGenerator(new GeneratorSettings { Size = size, Alphabet = alphabet, IncludeSpaces = includeSpaces, IncludePunctuation = includePunctuation, IncludeSpecialCharacters = includeSpecialCharacters });

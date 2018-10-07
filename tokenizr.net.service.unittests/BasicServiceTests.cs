@@ -15,6 +15,7 @@ namespace tokenizr.net.service.unittests
     private const string TestStringAllReplaced = "Hellothisisateststring";
     private const string TestStringHalfReplaced = "Hello,,,,,";
     private const string TestStringNoneReplaced = ",,,";
+    private const string TestNumbers = "4324-5098-1542-6579-0978-5382";
 
     [TestMethod]
     public void CanTokeniseABasicString()
@@ -24,6 +25,23 @@ namespace tokenizr.net.service.unittests
       var resultString = service.Tokenize(TestString1, tokenTable).Value;
       Assert.AreEqual(TestString1.Length, resultString.Length);
       Assert.AreNotEqual(TestString1, resultString);
+    }
+
+    [TestMethod]
+    public void CanTokeniseABasicNumber()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.Numbers);
+      var service = new BasicService(new ServiceSettings());
+      var resultString = service.Tokenize(TestNumbers, tokenTable).Value;
+      Assert.AreEqual(TestNumbers.Length, resultString.Length);
+      Assert.AreNotEqual(TestNumbers, resultString);
+      for(var i = 0; i < TestNumbers.Length; i++)
+      {
+        if(TestNumbers[i] != '-')
+        {
+          Assert.IsTrue(char.IsDigit(resultString[i]));
+        }
+      }
     }
 
     [TestMethod]
