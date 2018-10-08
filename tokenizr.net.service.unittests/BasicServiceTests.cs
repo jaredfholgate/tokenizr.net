@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using tokenizr.net.constants;
 using tokenizr.net.generator;
 using tokenizr.net.structures;
@@ -259,6 +260,56 @@ namespace tokenizr.net.service.unittests
       var service = new BasicService(new ServiceSettings { Mask = Mask.Parse(mask) });
       var exception = Assert.ThrowsException<System.Exception>(() => service.Tokenize(TestNumbers, tokenTable));
       Assert.AreEqual("Mask is set to MustMatchAndKeep does not match. Expected: - Found: 5", exception.Message);
+    }
+
+    [TestMethod]
+    public void CanHandleAnAdvancedMask()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.Numbers);
+      var mask = Mask.Parse("{{4*}}-{{4*}}-{{4*}}-{{4*}}-{{4*}}-{{4^}}");
+      var service = new BasicService(new ServiceSettings { Mask = mask });
+      var result = service.Tokenize(TestNumbers, tokenTable);
+      Assert.AreEqual(TestNumbers.Length, result.Value.Length);
+
+      var splitTest = TestNumbers.Split('-');
+      var splitResult = result.Value.Split('-');
+
+      for (var i = 0; i < splitTest.Length; i++)
+      {
+        if (i < splitTest.Length - 1)
+        {
+          Assert.AreNotEqual(splitTest[i], splitResult[i]);
+        }
+        else
+        {
+          Assert.AreEqual(splitTest[i], splitResult[i]);
+        }
+      }
+    }
+
+    [TestMethod]
+    public void CanHandleAnAdvancedMaskWithNoSeparators()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.Numbers);
+      var mask = Mask.Parse("{{25*}}{{4^}}");
+      var service = new BasicService(new ServiceSettings { Mask = mask });
+      var result = service.Tokenize(TestNumbers, tokenTable);
+      Assert.AreEqual(TestNumbers.Length, result.Value.Length);
+
+      var splitTest = TestNumbers.Split('-');
+      var splitResult = result.Value.Split('-');
+
+      for (var i = 0; i < splitTest.Length; i++)
+      {
+        if (i < splitTest.Length - 1)
+        {
+          Assert.AreNotEqual(splitTest[i], splitResult[i]);
+        }
+        else
+        {
+          Assert.AreEqual(splitTest[i], splitResult[i]);
+        }
+      }
     }
 
     private TokenTableSet GenerateTable(int size, string alphabet)
