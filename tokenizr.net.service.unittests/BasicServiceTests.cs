@@ -203,13 +203,38 @@ namespace tokenizr.net.service.unittests
       var splitResult = result.Value.Split('-');
       var splitMask = mask.Split('-');
 
-      for(var i = 0; i <splitTest.Length; i ++)
+      for(var i = 0; i < splitTest.Length; i ++)
       {
         if(splitMask[i] == "****")
         {
           Assert.AreNotEqual(splitTest[i], splitResult[i]);
         }
         if(splitMask[i] == "^^^^")
+        {
+          Assert.AreEqual(splitTest[i], splitResult[i]);
+        }
+      }
+    }
+
+    [TestMethod]
+    public void CanHandleABasicWithNoSeparatorsMask()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.Numbers);
+      var mask = "*************************^^^^";
+      var service = new BasicService(new ServiceSettings { Mask = Mask.Parse(mask) });
+      var result = service.Tokenize(TestNumbers, tokenTable);
+      Assert.AreEqual(TestNumbers.Length, result.Value.Length);
+
+      var splitTest = TestNumbers.Split('-');
+      var splitResult = result.Value.Split('-');
+
+      for (var i = 0; i < splitTest.Length; i++)
+      {
+        if(i < splitTest.Length - 1)
+        {
+          Assert.AreNotEqual(splitTest[i], splitResult[i]);
+        }
+        else
         {
           Assert.AreEqual(splitTest[i], splitResult[i]);
         }
