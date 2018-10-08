@@ -33,6 +33,14 @@ namespace tokenizr.net.service
       {
         return new BasicResult { Value = string.Empty, PercentReplaced = -1, AllTextReplaced = false };
       }
+
+      var hasMask = _settings.Mask != null && _settings.Mask.Length > 0;
+
+      if(hasMask && source.Length != _settings.Mask.Length)
+      {
+        throw new System.Exception("Mask Length does not match the source string length.");
+      }
+
       var result = new StringBuilder();
 
       var columnIndex = 0;
@@ -48,24 +56,59 @@ namespace tokenizr.net.service
 
       var replacedCount = 0;
 
-      foreach (var character in source)
+      for (var i = 0; i < source.Length; i ++)
       {
-        if (table[columnIndex].ContainsKey(character))
+        if (table[columnIndex].ContainsKey(source[i]))
         {
-          var newCharacter = table[columnIndex][character];
-          result.Append(newCharacter.Item1);
-          columnIndex = newCharacter.Item2;
-          replacedCount++;
+          if(hasMask && _settings.Mask.Items[i].MaskType != MaskType.ReplaceAny)
+          {
+            var maskItem = _settings.Mask.Items[i];
+            if (maskItem.MaskType == MaskType.KeepAnyOriginal)
+            {
+              result.Append(source[i]);
+            }
+            if(maskItem.MaskType == MaskType.MustMatchAndKeep)
+            {
+              CheckMaskMatch(source, result, i, maskItem);
+            }
+          }
+          else
+          {
+            var newCharacter = table[columnIndex][source[i]];
+            result.Append(newCharacter.Item1);
+            columnIndex = newCharacter.Item2;
+            replacedCount++;
+          }
         }
         else
         {
-          result.Append(character);
-        }
+          if (hasMask && _settings.Mask.Items[i].MaskType == MaskType.MustMatchAndKeep)
+          {
+            var maskItem = _settings.Mask.Items[i];
+            CheckMaskMatch(source, result, i, maskItem);
+          }
+          else
+          {
+            result.Append(source[i]);
+          }
+       }
       }
 
       var percentReplaced = ((double)replacedCount / source.Length) * 100;
 
       return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentReplaced = percentReplaced };
+    }
+
+    private static void CheckMaskMatch(string source, StringBuilder result, int i, MaskItem maskItem)
+    {
+      if (source[i] == maskItem.Match)
+      {
+        result.Append(source[i]);
+      }
+      else
+      {
+        throw new System.Exception($"Mask is set to MustMatchAndKeep does not match. Expected: {maskItem.Match} Found: {source[i]}");
+      }
     }
   }
 }

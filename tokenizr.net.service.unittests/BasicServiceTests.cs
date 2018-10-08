@@ -190,9 +190,55 @@ namespace tokenizr.net.service.unittests
       Assert.AreEqual(0, result.Value.Length);
     }
 
+    [TestMethod]
+    public void CanHandleABasicMask()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.Numbers);
+      var mask = "****-****-****-****-****-^^^^";
+      var service = new BasicService(new ServiceSettings { Mask = Mask.Parse(mask) });
+      var result = service.Tokenize(TestNumbers, tokenTable);
+      Assert.AreEqual(TestNumbers.Length, result.Value.Length);
+
+      var splitTest = TestNumbers.Split('-');
+      var splitResult = result.Value.Split('-');
+      var splitMask = mask.Split('-');
+
+      for(var i = 0; i <splitTest.Length; i ++)
+      {
+        if(splitMask[i] == "****")
+        {
+          Assert.AreNotEqual(splitTest[i], splitResult[i]);
+        }
+        if(splitMask[i] == "^^^^")
+        {
+          Assert.AreEqual(splitTest[i], splitResult[i]);
+        }
+      }
+    }
+
+    [TestMethod]
+    public void CanHandleAMaskMismatch()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.Numbers);
+      var mask = "****-****-****-****-****-^^^";
+      var service = new BasicService(new ServiceSettings { Mask = Mask.Parse(mask) });
+      var exception = Assert.ThrowsException<System.Exception>(() => service.Tokenize(TestNumbers, tokenTable));
+      Assert.AreEqual("Mask Length does not match the source string length.", exception.Message);
+    }
+
+    [TestMethod]
+    public void CanHandleAMaskMismatchForMatchAndKeep()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.Numbers);
+      var mask = "****-****-****-****-*****-^^^";
+      var service = new BasicService(new ServiceSettings { Mask = Mask.Parse(mask) });
+      var exception = Assert.ThrowsException<System.Exception>(() => service.Tokenize(TestNumbers, tokenTable));
+      Assert.AreEqual("Mask is set to MustMatchAndKeep does not match. Expected: - Found: 5", exception.Message);
+    }
+
     private TokenTableSet GenerateTable(int size, string alphabet)
     {
-      var generator = new TableGenerator(new generator.GeneratorSettings { Size = size, Alphabet = alphabet});
+      var generator = new TableGenerator(new GeneratorSettings { Size = size, Alphabet = alphabet});
       return generator.Generate();
     }
   }
