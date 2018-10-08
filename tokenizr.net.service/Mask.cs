@@ -30,7 +30,7 @@ namespace tokenizr.net.service
         switch (item)
         {
           case '*':
-            if (startBraceCount == 2 && countOfItems != 0)
+            if (advancedMask && startBraceCount == 2 && countOfItems != 0)
             {
               for (var i = 0; i < countOfItems; i++)
               {
@@ -45,7 +45,7 @@ namespace tokenizr.net.service
             break;
 
           case '^':
-            if (startBraceCount == 2 && countOfItems != 0)
+            if (advancedMask && startBraceCount == 2 && countOfItems != 0)
             {
               for (var i = 0; i < countOfItems; i++)
               {
@@ -60,12 +60,26 @@ namespace tokenizr.net.service
             break;
 
           case '{':
-            startBraceCount += 1;
+            if (advancedMask)
+            {
+              startBraceCount += 1;
+            }
+            else
+            {
+              maskObject.Items.Add(new MaskItem { MaskType = MaskType.MustMatchAndKeep, Match = item });
+            }
             break;
 
           case '}':
-            startBraceCount = 0;
-            previousNumbers = string.Empty;
+            if (advancedMask)
+            {
+              startBraceCount = 0;
+              previousNumbers = string.Empty;
+            }
+            else
+            {
+              maskObject.Items.Add(new MaskItem { MaskType = MaskType.MustMatchAndKeep, Match = item });
+            }
             break;
 
           default:

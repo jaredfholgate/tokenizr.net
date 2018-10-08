@@ -312,6 +312,20 @@ namespace tokenizr.net.service.unittests
       }
     }
 
+    [TestMethod]
+    public void CanHandleBasicMaskWithCurlyBraces()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.English);
+      var mask = Mask.Parse("{********}");
+      var testString = "{TestMask}";
+      var service = new BasicService(new ServiceSettings { Mask = mask });
+      var result = service.Tokenize(testString, tokenTable);
+      Assert.AreEqual(testString.Length, result.Value.Length);
+      Assert.AreEqual('{', result.Value[0]);
+      Assert.AreEqual('}', result.Value[9]);
+      Assert.IsFalse(result.Value.Contains("TestMask"));
+    }
+
     private TokenTableSet GenerateTable(int size, string alphabet)
     {
       var generator = new TableGenerator(new GeneratorSettings { Size = size, Alphabet = alphabet});
