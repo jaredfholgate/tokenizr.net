@@ -291,7 +291,7 @@ namespace tokenizr.net.service.unittests
     public void CanHandleAnAdvancedMaskWithNoSeparators()
     {
       var tokenTable = GenerateTable(Size, Alphabet.Numbers);
-      var mask = Mask.Parse("{{25*}}{{4^}}");
+      var mask = Mask.Parse("{{4^}}{{21*}}{{4^}}");
       var service = new BasicService(new ServiceSettings { Mask = mask });
       var result = service.Tokenize(TestNumbers, tokenTable);
       Assert.AreEqual(TestNumbers.Length, result.Value.Length);
@@ -301,7 +301,7 @@ namespace tokenizr.net.service.unittests
 
       for (var i = 0; i < splitTest.Length; i++)
       {
-        if (i < splitTest.Length - 1)
+        if (i != 0 && i < splitTest.Length - 1)
         {
           Assert.AreNotEqual(splitTest[i], splitResult[i]);
         }
