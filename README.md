@@ -30,7 +30,7 @@ There are various option when generating tables, such as whether to include punc
 
 The client consists of 2 main methods Tokenise and Detokenise. You can probably guess what they do.
 
-There is an option for consistency. This is for an edge case where you might want to search on the start of a tokenised field. It will consistently tokenise from the start of the text.
+There is an option for consistency. This is for an edge case where you might want to search on the start of a tokenised field. It will consistently tokenise from the start of the text, but is obviously less secure.
 
 There is an option to supply a mask, so that only parts of a field are tokenised, for example you may want to retain the last 4 digits of a card number to confirm with the user that is the card they want to use.
 
