@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net", "tokenizr.ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.constants", "tokenizr.net.constants\tokenizr.net.constants.csproj", "{BEC8B277-515C-489A-90E7-ADA7947CE144}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.serialisation", "tokenizr.net.serialisation\tokenizr.net.serialisation.csproj", "{4DB7D234-88A7-4212-B3A9-EC1E74703F29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.serialisation.unittests", "tokenizr.net.serialisation.unittests\tokenizr.net.serialisation.unittests.csproj", "{FF341BA7-6EE3-43C9-8DF8-82CE23A93F0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{BEC8B277-515C-489A-90E7-ADA7947CE144}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEC8B277-515C-489A-90E7-ADA7947CE144}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEC8B277-515C-489A-90E7-ADA7947CE144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB7D234-88A7-4212-B3A9-EC1E74703F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB7D234-88A7-4212-B3A9-EC1E74703F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB7D234-88A7-4212-B3A9-EC1E74703F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB7D234-88A7-4212-B3A9-EC1E74703F29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF341BA7-6EE3-43C9-8DF8-82CE23A93F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF341BA7-6EE3-43C9-8DF8-82CE23A93F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF341BA7-6EE3-43C9-8DF8-82CE23A93F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF341BA7-6EE3-43C9-8DF8-82CE23A93F0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
