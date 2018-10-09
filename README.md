@@ -6,7 +6,7 @@ C# project for tokenization of strings for security in apps.
 
 ## What is Tokenisation?
 
-Tokenisation is a layer of security abstraction applied at the application logic level. It allows individual fields to be persisted to the database as 'scrambled' text, which can only be reversed to their true value by leveraging the tokenisation service. Tokenisation can be used where tradistional cryptography may be hard, for example if you are unable to change the database schema of our application, you can still store data in a tokenised form and it will meet the validation rules in your databases. E.g. String length, characters allowed, etc.
+Tokenisation is a layer of security abstraction applied at the application logic level. It allows individual fields to be persisted to the database as 'scrambled' text, which can only be reversed to their true value by leveraging the tokenisation service. Tokenisation can be used where tradistional cryptography may be hard, for example if you are unable to change the database schema of your application, you can still store data in a tokenised form and it will meet the validation rules in your databases. E.g. String length, characters allowed, etc.
 
 Tokenisation also allows a limited level of search indexing of these fields too. Generally, you would only be able to search for the whole word / sentence, or in a less secure mode you can also search the start for partial phrases or words.
 
