@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.compression.un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.compression", "tokenizr.net.compression\tokenizr.net.compression.csproj", "{6DF308D6-067F-470B-A0F4-4BCE30C56427}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.unittests", "tokenizr.net.unittests\tokenizr.net.unittests.csproj", "{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{6DF308D6-067F-470B-A0F4-4BCE30C56427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DF308D6-067F-470B-A0F4-4BCE30C56427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DF308D6-067F-470B-A0F4-4BCE30C56427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace tokenizr.net.compression
 {
-  public class Compression
+  public class Compression : ICompression
   {
     public string Compress(string source)
     {

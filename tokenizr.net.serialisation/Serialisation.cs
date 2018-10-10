@@ -4,7 +4,7 @@ using tokenizr.net.structures;
 
 namespace tokenizr.net.serialisation
 {
-  public class Serialisation
+  public class Serialisation : ISerialisation
   {
     public string Serliaise(TokenTableSet table)
     {

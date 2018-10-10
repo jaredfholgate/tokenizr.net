@@ -6,7 +6,7 @@ using tokenizr.net.constants;
 
 namespace tokenizr.net.generator
 {
-  public class TableGenerator
+  public class TableGenerator : ITableGenerator
   {
     private readonly IGeneratorSettings _settings;
 

@@ -5,7 +5,7 @@ using tokenizr.net.structures;
 
 namespace tokenizr.net.service
 {
-  public class BasicService
+  public class BasicService : IBasicService
   {
     private readonly IServiceSettings _settings;
 
