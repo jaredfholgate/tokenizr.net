@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using tokenizr.net.constants;
 using tokenizr.net.structures;
 
@@ -15,16 +16,36 @@ namespace tokenizr.net.service
 
     public BasicResult Tokenize(string source, TokenTableSet table)
     {
-      var result = Encode(source, table.ForwardTable);
-      result.Action = ActionType.Tokenize;
-      return result;
+      return Tokenize(new List<string> { source }, table)[0];
     }
 
     public BasicResult Detokenize(string source, TokenTableSet table)
     {
-      var result = Encode(source, table.ReverseTable);
-      result.Action = ActionType.Detokenize;
-      return result;
+      return Detokenize(new List<string> { source }, table)[0];
+    }
+
+    public List<BasicResult> Tokenize(List<string> sources, TokenTableSet table)
+    {
+      var results = new List<BasicResult>();
+      foreach (var source in sources)
+      {
+        var result = Encode(source, table.ForwardTable);
+        result.Action = ActionType.Tokenize;
+        results.Add(result);
+      }
+      return results;
+    }
+
+    public List<BasicResult> Detokenize(List<string> sources, TokenTableSet table)
+    {
+      var results = new List<BasicResult>();
+      foreach (var source in sources)
+      {
+        var result = Encode(source, table.ReverseTable);
+        result.Action = ActionType.Detokenize;
+        results.Add(result);
+      }
+      return results;
     }
 
     private BasicResult Encode(string source, TokenTable table)

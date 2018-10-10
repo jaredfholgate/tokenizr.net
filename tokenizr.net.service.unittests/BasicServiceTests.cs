@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 using tokenizr.net.constants;
 using tokenizr.net.generator;
 using tokenizr.net.structures;
@@ -187,7 +188,8 @@ namespace tokenizr.net.service.unittests
     {
       var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new ServiceSettings());
-      var result = service.Tokenize(null, tokenTable);
+      string testString = null;
+      var result = service.Tokenize(testString, tokenTable);
       Assert.AreEqual(0, result.Value.Length);
     }
 
@@ -324,6 +326,26 @@ namespace tokenizr.net.service.unittests
       Assert.AreEqual('{', result.Value[0]);
       Assert.AreEqual('}', result.Value[9]);
       Assert.IsFalse(result.Value.Contains("TestMask"));
+    }
+
+    [TestMethod]
+    public void CanHandleMultipleStrings()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.English);
+      var service = new BasicService(new ServiceSettings());
+
+      var testStrings = new List<string>();
+      for (int i = 0; i < 100; i++)
+      {
+        testStrings.Add(TestString1 + i.ToString());
+      }
+
+      var results = service.Tokenize(testStrings, tokenTable);
+      results = service.Detokenize(results.Select(o => o.Value).ToList(), tokenTable);
+      for(var i = 0; i < testStrings.Count; i++)
+      {
+        Assert.AreEqual(testStrings[i], results[i].Value);
+      }
     }
 
     private TokenTableSet GenerateTable(int size, string alphabet)
