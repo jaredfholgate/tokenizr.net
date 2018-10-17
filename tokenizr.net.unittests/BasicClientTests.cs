@@ -1,8 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using tokenizr.net.compression;
-using tokenizr.net.generator;
-using tokenizr.net.serialisation;
-using tokenizr.net.service;
 
 namespace tokenizr.net.unittests
 {

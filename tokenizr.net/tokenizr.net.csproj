@@ -13,6 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\tokenizr.net.compression\tokenizr.net.compression.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\tokenizr.net.generator\tokenizr.net.generator.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\tokenizr.net.serialisation\tokenizr.net.serialisation.csproj" PrivateAssets="all" />
