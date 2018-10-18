@@ -5,6 +5,7 @@ using tokenizr.net.compression;
 using tokenizr.net.generator;
 using tokenizr.net.serialisation;
 using tokenizr.net.service;
+using tokenizr.net.structures;
 
 namespace tokenizr.net
 {
@@ -14,13 +15,11 @@ namespace tokenizr.net
     private readonly IBasicService _basicService;
     private readonly ISerialisation _serialisation;
     private readonly ICompression _compression;
+    private TokenTableSet _tokenTableSet;
 
-    public BasicClient()
+    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings), new Serialisation(), new Compression())
     {
-      _tableGenerator = new TableGenerator(new GeneratorSettings());
-      _basicService = new BasicService(new ServiceSettings());
-      _serialisation = new Serialisation();
-      _compression = new Compression();
+
     }
 
     public BasicClient(ITableGenerator tableGenerator, IBasicService basicService, ISerialisation serialisation, ICompression compression)
@@ -29,13 +28,22 @@ namespace tokenizr.net
       _basicService = basicService;
       _serialisation = serialisation;
       _compression = compression;
+      _tokenTableSet = Generate();
     }
 
-    public string Generate()
+    public TokenTableSet Generate()
     {
-      var table = _tableGenerator.Generate();
-      var result = _compression.Compress(_serialisation.Serliaise(table));
-      return result;
+      return _tableGenerator.Generate();
+    }
+
+    public BasicResult Tokenize(string stringToTokenize)
+    {
+      return _basicService.Tokenize(stringToTokenize, _tokenTableSet);
+    }
+
+    public BasicResult Detokenize(string stringToDetokenize)
+    {
+      return _basicService.Detokenize(stringToDetokenize, _tokenTableSet);
     }
   }
 }

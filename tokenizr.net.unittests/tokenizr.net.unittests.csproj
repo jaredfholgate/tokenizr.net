@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\tokenizr.net.generator\tokenizr.net.generator.csproj" />
+    <ProjectReference Include="..\tokenizr.net.service\tokenizr.net.service.csproj" />
     <ProjectReference Include="..\tokenizr.net\tokenizr.net.csproj" />
   </ItemGroup>
 

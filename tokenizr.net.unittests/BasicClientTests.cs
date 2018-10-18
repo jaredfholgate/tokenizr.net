@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using tokenizr.net.generator;
+using tokenizr.net.service;
 
 namespace tokenizr.net.unittests
 {
@@ -6,11 +8,11 @@ namespace tokenizr.net.unittests
   public class BasicClientTests
   {
     [TestMethod]
-    public void CanGenerateAStandardTableThatIsSerialisedCompressedAndEncrypted()
+    public void CanGenerateAStandardTable()
     {
-      var client = new BasicClient();
+      var client = new BasicClient(new GeneratorSettings() { Size= 200 }, new ServiceSettings());
       var result = client.Generate();
-      Assert.AreNotEqual(0, result.Length);
+      Assert.AreEqual(200, result.ForwardTable.Count);
     }
   }
 }
