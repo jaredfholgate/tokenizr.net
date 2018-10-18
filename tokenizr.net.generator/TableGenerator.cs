@@ -33,6 +33,11 @@ namespace tokenizr.net.generator
       return tableSet;
     }
 
+    public IGeneratorSettings GetSettings()
+    {
+      return _settings;
+    }
+
     public void GenerateRandomColumn(int size, string alphabet, TokenTable forwardTable, TokenTable reverseTable)
     {
       var forwardColumn = new Dictionary<char, Tuple<char, int>>();

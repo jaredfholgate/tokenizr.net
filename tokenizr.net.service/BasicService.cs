@@ -14,6 +14,11 @@ namespace tokenizr.net.service
       _settings = settings;
     }
 
+    public IServiceSettings GetSettings()
+    {
+      return _settings;
+    }
+
     public BasicResult Tokenize(string source, TokenTableSet table)
     {
       return Tokenize(new List<string> { source }, table)[0];

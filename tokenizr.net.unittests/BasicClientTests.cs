@@ -11,7 +11,7 @@ namespace tokenizr.net.unittests
     public void CanGenerateAStandardTable()
     {
       var client = new BasicClient(new GeneratorSettings() { Size= 200 }, new ServiceSettings());
-      var result = client.Generate();
+      var result = client.GenerateTokenTable();
       Assert.AreEqual(200, result.ForwardTable.Count);
     }
   }

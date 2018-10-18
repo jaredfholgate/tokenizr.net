@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using tokenizr.net.compression;
+﻿using tokenizr.net.compression;
 using tokenizr.net.generator;
 using tokenizr.net.serialisation;
 using tokenizr.net.service;
@@ -9,29 +6,41 @@ using tokenizr.net.structures;
 
 namespace tokenizr.net
 {
-  public class BasicClient
+  public class BasicClient : IBasicClient
   {
     private readonly ITableGenerator _tableGenerator;
     private readonly IBasicService _basicService;
     private readonly ISerialisation _serialisation;
     private readonly ICompression _compression;
-    private TokenTableSet _tokenTableSet;
-
-    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings), new Serialisation(), new Compression())
+    private readonly TokenTableSet _tokenTableSet;
+       
+    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings), new Serialisation(), new Compression(), null)
     {
 
     }
 
-    public BasicClient(ITableGenerator tableGenerator, IBasicService basicService, ISerialisation serialisation, ICompression compression)
+    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings, TokenTableSet tokenTableSet) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings), new Serialisation(), new Compression(), tokenTableSet)
+    {
+
+    }
+
+    public BasicClient(ITableGenerator tableGenerator, IBasicService basicService, ISerialisation serialisation, ICompression compression, TokenTableSet tokenTableSet)
     {
       _tableGenerator = tableGenerator;
       _basicService = basicService;
       _serialisation = serialisation;
       _compression = compression;
-      _tokenTableSet = Generate();
+      if (tokenTableSet == null)
+      {
+        _tokenTableSet = GenerateTokenTable();
+      }
+      else
+      {
+        _tokenTableSet = tokenTableSet;
+      }
     }
 
-    public TokenTableSet Generate()
+    public TokenTableSet GenerateTokenTable()
     {
       return _tableGenerator.Generate();
     }
@@ -44,6 +53,17 @@ namespace tokenizr.net
     public BasicResult Detokenize(string stringToDetokenize)
     {
       return _basicService.Detokenize(stringToDetokenize, _tokenTableSet);
+    }
+
+    public string Serialise(string encryptionKey)
+    {
+      var serlizedBasicClient = new SerlializedBasicClient()
+      {
+        TokenTable = _tokenTableSet,
+        GeneratorSettings = (GeneratorSettings)_tableGenerator.GetSettings(),
+        ServiceSettings = (ServiceSettings)_basicService.GetSettings()
+      };
+      return _compression.Compress(_serialisation.Serliaise(serlizedBasicClient));
     }
   }
 }

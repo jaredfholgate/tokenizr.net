@@ -73,5 +73,23 @@ namespace tokenizr.net.unittests
       result = client.Detokenize(result).Value;
       Assert.AreEqual(testString, result);
     }
+
+    [TestMethod]
+    public void CanSerliaseAndDeserialiseClient()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullEnglish);
+      var testString = "abc,def,ghi,123???{{}}";
+      var encryptionKey = "TestKey";
+      var result1 = client.Tokenize(testString).Value;
+      var serliasedClient = client.Serialise(encryptionKey);
+
+      client = new BasicClientFactory().Deserialise(encryptionKey, serliasedClient);
+      var result2 = client.Tokenize(testString).Value;
+      Assert.AreEqual(result1, result2);
+
+      result2 = client.Detokenize(result2).Value;
+      Assert.AreEqual(testString, result2);
+
+    }
   }
 }

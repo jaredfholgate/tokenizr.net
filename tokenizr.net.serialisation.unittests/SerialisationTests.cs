@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using tokenizr.net.constants;
 using tokenizr.net.generator;
+using tokenizr.net.structures;
 
 namespace tokenizr.net.serialisation.unittests
 {
@@ -25,7 +26,7 @@ namespace tokenizr.net.serialisation.unittests
       var generator = new TableGenerator(new GeneratorSettings { Alphabet = Alphabet.English, Size = 1000 });
       var table = generator.Generate();
       var result = serialiser.Serliaise(table);
-      var resultTable = serialiser.Deserialise(result);
+      var resultTable = serialiser.Deserialise<TokenTableSet>(result);
       for (var i = 0; i < 1000; i++)
       {
         foreach (var character in Alphabet.English)

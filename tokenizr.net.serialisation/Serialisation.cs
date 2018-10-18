@@ -6,14 +6,14 @@ namespace tokenizr.net.serialisation
 {
   public class Serialisation : ISerialisation
   {
-    public string Serliaise(TokenTableSet table)
+    public string Serliaise<T>(T table)
     {
       return JsonConvert.SerializeObject(table);
     }
 
-    public TokenTableSet Deserialise(string table)
+    public T Deserialise<T>(string table)
     {
-      return JsonConvert.DeserializeObject<TokenTableSet>(table);
+      return JsonConvert.DeserializeObject<T>(table);
     }
   }
 }

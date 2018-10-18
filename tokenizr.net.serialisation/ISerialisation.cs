@@ -4,7 +4,7 @@ namespace tokenizr.net.serialisation
 {
   public interface ISerialisation
   {
-    TokenTableSet Deserialise(string table);
-    string Serliaise(TokenTableSet table);
+    T Deserialise<T>(string table);
+    string Serliaise<T>(T table);
   }
 }

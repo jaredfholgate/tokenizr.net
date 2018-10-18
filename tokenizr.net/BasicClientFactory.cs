@@ -1,14 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using tokenizr.net.constants;
+﻿using tokenizr.net.constants;
 using tokenizr.net.generator;
 using tokenizr.net.service;
+using tokenizr.net.compression;
+using tokenizr.net.serialisation;
 
 namespace tokenizr.net
 {
   public class BasicClientFactory
   {
+    private readonly ISerialisation _serialisation;
+    private readonly ICompression _compression;
+
+    public BasicClientFactory() : this(new Serialisation(), new Compression())
+    {
+    }
+
+    public BasicClientFactory(ISerialisation serialisation, ICompression compression)
+    {
+      _serialisation = serialisation;
+      _compression = compression;
+    }
+
     /// <summary>
     /// Instantiate a BasicClient with set of common defaults. Use this class as an example for more customised setups.
     /// </summary>
@@ -39,6 +51,12 @@ namespace tokenizr.net
 
       }
       return basicClient;
+    }
+
+    public BasicClient Deserialise(string encryptionKey, string client)
+    {
+      var serlizedBasicClient = _serialisation.Deserialise<SerlializedBasicClient>(_compression.Decompress(client));
+      return new BasicClient(serlizedBasicClient.GeneratorSettings, serlizedBasicClient.ServiceSettings, serlizedBasicClient.TokenTable);
     }
   }
 }
