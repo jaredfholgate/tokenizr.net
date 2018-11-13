@@ -38,9 +38,12 @@ There is an option to supply a mask, so that only parts of a field are tokenised
 
 ```csharp
 // Soon Come
-var sone = new Come();
+var soon = new Come();
 ```
 
 ### Client Examples
 
-//SOON COME!
+```csharp
+// Soon Come
+var soon = new Come();
+```
