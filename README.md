@@ -1,6 +1,6 @@
 # tokenizr.net
 
-[![Build status](https://dev.azure.com/jaredfholgate/tokenizr.net/_apis/build/status/tokenizr.net)](https://dev.azure.com/jaredfholgate/tokenizr.net/_build/latest?definitionId=-1) 
+[![Build status](https://dev.azure.com/jaredfholgate/tokenizr.net/_apis/build/status/tokenizr.net)](https://dev.azure.com/jaredfholgate/tokenizr.net/_build/latest?definitionId=-1) [![NuGet Version](https://img.shields.io/nuget/vpre/tokenizr.net.svg?style=flat)](https://www.nuget.org/packages/tokenizr.net/)
 
 C# project for tokenization of strings for security in apps.
 
