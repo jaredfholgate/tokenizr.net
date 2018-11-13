@@ -36,7 +36,10 @@ There is an option to supply a mask, so that only parts of a field are tokenised
 
 ### Generator Examples
 
-//SOON COME!
+```csharp
+// Soon Come
+var sone = new Come();
+```
 
 ### Client Examples
 
