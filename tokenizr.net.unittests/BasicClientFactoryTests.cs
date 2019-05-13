@@ -74,7 +74,6 @@ namespace tokenizr.net.unittests
       Assert.AreEqual(testString, result);
     }
 
-    [Ignore]
     [TestMethod]
     public void CanGenerateAFullUnicodeBasicClient()
     {

@@ -50,7 +50,7 @@ namespace tokenizr.net
           break;
 
         case BasicClientType.FullUnicode:
-            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = size }, new ServiceSettings() { Consistent = consistent });
+            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = 100 }, new ServiceSettings() { Consistent = consistent });
             break;
 
       }
