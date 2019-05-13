@@ -20,7 +20,15 @@ namespace tokenizr.net.generator
       var tableSet = new TokenTableSet();
       var forwardTable = new TokenTable();
       var reverseTable = new TokenTable();
-      var alphabet = _settings.Alphabet + (_settings.IncludeSpaces ? Characters.Space : string.Empty) + (_settings.IncludePunctuation ? Characters.Punctuation : string.Empty ) + (_settings.IncludeSpecialCharacters ? Characters.SpecialCharacters : string.Empty);
+      var alphabet = string.IsNullOrWhiteSpace(_settings.CharacterString) ? 
+                _settings.CharacterArray : 
+                (_settings.CharacterString + (_settings.IncludeSpaces ? Characters.Space : string.Empty) + (_settings.IncludePunctuation ? Characters.Punctuation : string.Empty ) + (_settings.IncludeSpecialCharacters ? Characters.SpecialCharacters : string.Empty)).ToCharArray().ToList();
+
+      if(alphabet.Count == 0)
+      {
+         throw new ArgumentException("A character set must be supplied.");
+      }
+
 
       for (var i = 0; i <_settings.Size; i++)
       {
@@ -38,18 +46,18 @@ namespace tokenizr.net.generator
       return _settings;
     }
 
-    public void GenerateRandomColumn(int size, string alphabet, TokenTable forwardTable, TokenTable reverseTable)
+    public void GenerateRandomColumn(int size, List<char> characters, TokenTable forwardTable, TokenTable reverseTable)
     {
       var forwardColumn = new Dictionary<char, Tuple<char, int>>();
       var reverseColumn = new Dictionary<char, Tuple<char, int>>();
 
-      var replacements = alphabet.ToCharArray().ToList();
+      var replacements = characters.ToList();
       replacements.Shuffle();
-      for(var i = 0; i < alphabet.Length; i++)
+      for(var i = 0; i < characters.Count; i++)
       {
         var columnReference = ThreadSafeRandom.ThisThreadsRandom.Next(0, size - 1);
-        forwardColumn.Add(alphabet[i], new Tuple<char, int>(replacements[i], columnReference));
-        reverseColumn.Add(replacements[i], new Tuple<char, int>(alphabet[i], columnReference));
+        forwardColumn.Add(characters[i], new Tuple<char, int>(replacements[i], columnReference));
+        reverseColumn.Add(replacements[i], new Tuple<char, int>(characters[i], columnReference));
       }
 
       forwardTable.Add(forwardColumn);

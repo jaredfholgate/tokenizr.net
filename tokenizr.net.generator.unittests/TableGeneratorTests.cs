@@ -102,7 +102,7 @@ namespace tokenizr.net.generator.unittests
 
     private TokenTableSet GenerateTable(int size, string alphabet, bool includeSpaces, bool includePunctuation, bool includeSpecialCharacters)
     {
-      var generator = new TableGenerator(new GeneratorSettings { Size = size, Alphabet = alphabet, IncludeSpaces = includeSpaces, IncludePunctuation = includePunctuation, IncludeSpecialCharacters = includeSpecialCharacters });
+      var generator = new TableGenerator(new GeneratorSettings { Size = size, CharacterString = alphabet, IncludeSpaces = includeSpaces, IncludePunctuation = includePunctuation, IncludeSpecialCharacters = includeSpecialCharacters });
       return generator.Generate();
     }
   }

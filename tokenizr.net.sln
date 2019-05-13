@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.generator", "tokenizr.net.generator\tokenizr.net.generator.csproj", "{C7DBC139-A1DB-401E-889C-1AD49132745B}"
 EndProject
@@ -9,23 +9,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.generator.unit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.structures", "tokenizr.net.structures\tokenizr.net.structures.csproj", "{A3550CC6-140D-4E69-A561-7640A8647072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.service", "tokenizr.net.service\tokenizr.net.service.csproj", "{261A3A94-3D46-4364-B9D7-E4FD1E03E619}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.service", "tokenizr.net.service\tokenizr.net.service.csproj", "{261A3A94-3D46-4364-B9D7-E4FD1E03E619}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.service.unittests", "tokenizr.net.service.unittests\tokenizr.net.service.unittests.csproj", "{31065558-3DB2-441E-B0AE-93FA350BB1A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.service.unittests", "tokenizr.net.service.unittests\tokenizr.net.service.unittests.csproj", "{31065558-3DB2-441E-B0AE-93FA350BB1A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net", "tokenizr.net\tokenizr.net.csproj", "{C14467F5-5FE7-426E-BD90-789B9226EFA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net", "tokenizr.net\tokenizr.net.csproj", "{C14467F5-5FE7-426E-BD90-789B9226EFA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.constants", "tokenizr.net.constants\tokenizr.net.constants.csproj", "{BEC8B277-515C-489A-90E7-ADA7947CE144}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.constants", "tokenizr.net.constants\tokenizr.net.constants.csproj", "{BEC8B277-515C-489A-90E7-ADA7947CE144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.serialisation", "tokenizr.net.serialisation\tokenizr.net.serialisation.csproj", "{4DB7D234-88A7-4212-B3A9-EC1E74703F29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.serialisation", "tokenizr.net.serialisation\tokenizr.net.serialisation.csproj", "{4DB7D234-88A7-4212-B3A9-EC1E74703F29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.serialisation.unittests", "tokenizr.net.serialisation.unittests\tokenizr.net.serialisation.unittests.csproj", "{FF341BA7-6EE3-43C9-8DF8-82CE23A93F0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.serialisation.unittests", "tokenizr.net.serialisation.unittests\tokenizr.net.serialisation.unittests.csproj", "{FF341BA7-6EE3-43C9-8DF8-82CE23A93F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.compression.unittests", "tokenizr.net.compression.unittests\tokenizr.net.compression.unittests.csproj", "{27E2EE7C-4B17-4883-954C-876BD3A5CD34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.compression.unittests", "tokenizr.net.compression.unittests\tokenizr.net.compression.unittests.csproj", "{27E2EE7C-4B17-4883-954C-876BD3A5CD34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.compression", "tokenizr.net.compression\tokenizr.net.compression.csproj", "{6DF308D6-067F-470B-A0F4-4BCE30C56427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.compression", "tokenizr.net.compression\tokenizr.net.compression.csproj", "{6DF308D6-067F-470B-A0F4-4BCE30C56427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.unittests", "tokenizr.net.unittests\tokenizr.net.unittests.csproj", "{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.unittests", "tokenizr.net.unittests\tokenizr.net.unittests.csproj", "{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.unicode", "tokenizr.net.unicode\tokenizr.net.unicode.csproj", "{081FA1DD-CEC7-4D76-8E10-E2438AE644D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.unicode.unittests", "tokenizr.net.unicode.unittests\tokenizr.net.unicode.unittests.csproj", "{E8E9E555-C336-45BF-851F-82E9E602BB5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,14 @@ Global
 		{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E26A5EC-B698-4F60-9AF6-5113C8ACA97C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{081FA1DD-CEC7-4D76-8E10-E2438AE644D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{081FA1DD-CEC7-4D76-8E10-E2438AE644D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{081FA1DD-CEC7-4D76-8E10-E2438AE644D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{081FA1DD-CEC7-4D76-8E10-E2438AE644D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8E9E555-C336-45BF-851F-82E9E602BB5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8E9E555-C336-45BF-851F-82E9E602BB5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8E9E555-C336-45BF-851F-82E9E602BB5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8E9E555-C336-45BF-851F-82E9E602BB5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

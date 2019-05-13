@@ -350,7 +350,7 @@ namespace tokenizr.net.service.unittests
 
     private TokenTableSet GenerateTable(int size, string alphabet)
     {
-      var generator = new TableGenerator(new GeneratorSettings { Size = size, Alphabet = alphabet});
+      var generator = new TableGenerator(new GeneratorSettings { Size = size, CharacterString = alphabet});
       return generator.Generate();
     }
   }

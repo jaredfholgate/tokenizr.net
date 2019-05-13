@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
 namespace tokenizr.net.unittests
@@ -73,6 +73,25 @@ namespace tokenizr.net.unittests
       result = client.Detokenize(result).Value;
       Assert.AreEqual(testString, result);
     }
+
+    [Ignore]
+    [TestMethod]
+    public void CanGenerateAFullUnicodeBasicClient()
+    {
+        var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode);
+        var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
+        var result = client.Tokenize(testString).Value;
+
+        Assert.AreNotEqual(testString, result);
+        for (int i = 0; i < result.Length; i++)
+        {
+           Assert.AreNotEqual(testString[i], result[i]);
+        }
+        result = client.Detokenize(result).Value;
+
+        Assert.AreEqual(testString, result);
+    }
+
 
     [TestMethod]
     public void CanSerliaseAndDeserialiseClient()

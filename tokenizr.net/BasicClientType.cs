@@ -24,6 +24,10 @@ namespace tokenizr.net
     /// <summary>
     /// Numbers 0 through 10 only. Spaces, punctuation and special characters will not be replaced. A credit card mask is defined that will retain the last 4 digits and the dashes. Choose this for credit card numbers. Consistency will be ignored for this.
     /// </summary>
-    CreditCard
+    CreditCard,
+    /// <summary>
+    /// Every unicode character for every language, with all numbers, punctuation and special characters
+    /// </summary>
+    FullUnicode
   }
 }

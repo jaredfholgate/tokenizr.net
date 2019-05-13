@@ -34,20 +34,24 @@ namespace tokenizr.net
       switch(basicClientType)
       {
         case BasicClientType.BasicEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { Alphabet = Alphabet.English, Size = size }, new ServiceSettings() { Consistent = consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size }, new ServiceSettings() { Consistent = consistent });
           break;
 
         case BasicClientType.FullEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { Alphabet = Alphabet.English, Size = size, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Consistent = consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Consistent = consistent });
           break;
 
         case BasicClientType.BasicNumbers:
-          basicClient = new BasicClient(new GeneratorSettings() { Alphabet = Alphabet.Numbers, Size = size }, new ServiceSettings());
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = size }, new ServiceSettings());
           break;
 
         case BasicClientType.CreditCard:
-          basicClient = new BasicClient(new GeneratorSettings() { Alphabet = Alphabet.Numbers, Size = size }, new ServiceSettings() { Mask = Mask.Parse("{{4*}}-{{4*}}-{{4*}}-{{4^}}") });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = size }, new ServiceSettings() { Mask = Mask.Parse("{{4*}}-{{4*}}-{{4*}}-{{4^}}") });
           break;
+
+        case BasicClientType.FullUnicode:
+            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = size }, new ServiceSettings() { Consistent = consistent });
+            break;
 
       }
       return basicClient;

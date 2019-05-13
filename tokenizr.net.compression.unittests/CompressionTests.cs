@@ -13,7 +13,7 @@ namespace tokenizr.net.compression.unittests
     {
       var compressor = new Compression();
       var serialiser = new Serialisation();
-      var generator = new TableGenerator(new GeneratorSettings { Alphabet = Alphabet.English, Size = 1000 });
+      var generator = new TableGenerator(new GeneratorSettings { CharacterString = Alphabet.English, Size = 1000 });
       var table = generator.Generate();
       var serialised = serialiser.Serliaise(table);
       var result = compressor.Compress(serialised);

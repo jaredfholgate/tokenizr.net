@@ -12,7 +12,7 @@ namespace tokenizr.net.serialisation.unittests
     public void CanSerliaiseTable()
     {
       var serialiser = new Serialisation();
-      var generator = new TableGenerator(new GeneratorSettings { Alphabet = Alphabet.English, Size = 1000 });
+      var generator = new TableGenerator(new GeneratorSettings { CharacterString = Alphabet.English, Size = 1000 });
       var table = generator.Generate();
       var result = serialiser.Serliaise(table);
       var expectedText = "{\"ForwardTable\":[{\"a\":{\"Item1\":\"" + table.ForwardTable[0]['a'].Item1 + "\",\"Item2\":" + table.ForwardTable[0]['a'].Item2 + "},\"b\":{\"Item1\":\"" + table.ForwardTable[0]['b'].Item1 + "\",\"Item2\":" + table.ForwardTable[0]['b'].Item2 + "},";
@@ -23,7 +23,7 @@ namespace tokenizr.net.serialisation.unittests
     public void CanDeSerialiseTable()
     {
       var serialiser = new Serialisation();
-      var generator = new TableGenerator(new GeneratorSettings { Alphabet = Alphabet.English, Size = 1000 });
+      var generator = new TableGenerator(new GeneratorSettings { CharacterString = Alphabet.English, Size = 1000 });
       var table = generator.Generate();
       var result = serialiser.Serliaise(table);
       var resultTable = serialiser.Deserialise<TokenTableSet>(result);
