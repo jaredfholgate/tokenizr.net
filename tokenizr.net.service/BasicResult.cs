@@ -9,5 +9,7 @@
     public double PercentReplaced { get; set; }
 
     public string Value { get; set; }
+
+    public int Seed { get; set; }
   }
 }

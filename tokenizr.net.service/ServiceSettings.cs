@@ -2,7 +2,11 @@
 {
   public class ServiceSettings : IServiceSettings
   {
-    public bool Consistent { get; set; }
+    public ServiceSettings()
+    {
+      Behaviour = Behaviour.LengthBasedInconsistent;
+    }
+    public Behaviour Behaviour { get; set; }
     public Mask Mask { get; set; }
   }
 }

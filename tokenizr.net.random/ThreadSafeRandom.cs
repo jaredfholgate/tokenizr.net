@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace tokenizr.net.generator
+namespace tokenizr.net.random
 {
   public static class ThreadSafeRandom
   {

@@ -2,7 +2,7 @@
 {
   public interface IServiceSettings
   {
-    bool Consistent { get; set; }
+    Behaviour Behaviour { get; set; }
 
     Mask Mask { get; set; }
   }

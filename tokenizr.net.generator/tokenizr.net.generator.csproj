@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\tokenizr.net.constants\tokenizr.net.constants.csproj" />
+    <ProjectReference Include="..\tokenizr.net.random\tokenizr.net.random.csproj" />
     <ProjectReference Include="..\tokenizr.net.structures\tokenizr.net.structures.csproj" />
   </ItemGroup>
 

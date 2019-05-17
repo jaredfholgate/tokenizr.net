@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using tokenizr.net.constants;
+using tokenizr.net.random;
 using tokenizr.net.structures;
 
 namespace tokenizr.net.service
@@ -24,9 +25,9 @@ namespace tokenizr.net.service
       return Tokenize(new List<string> { source }, table)[0];
     }
 
-    public BasicResult Detokenize(string source, TokenTableSet table)
+    public BasicResult Detokenize(string source, TokenTableSet table, int seed = -1)
     {
-      return Detokenize(new List<string> { source }, table)[0];
+      return Detokenize(new List<string> { source }, table, seed)[0];
     }
 
     public List<BasicResult> Tokenize(List<string> sources, TokenTableSet table)
@@ -34,26 +35,26 @@ namespace tokenizr.net.service
       var results = new List<BasicResult>();
       foreach (var source in sources)
       {
-        var result = Encode(source, table.ForwardTable);
+        var result = Encode(source, table.ForwardTable, -1);
         result.Action = ActionType.Tokenize;
         results.Add(result);
       }
       return results;
     }
 
-    public List<BasicResult> Detokenize(List<string> sources, TokenTableSet table)
+    public List<BasicResult> Detokenize(List<string> sources, TokenTableSet table, int seed = -1)
     {
       var results = new List<BasicResult>();
       foreach (var source in sources)
       {
-        var result = Encode(source, table.ReverseTable);
+        var result = Encode(source, table.ReverseTable, seed);
         result.Action = ActionType.Detokenize;
         results.Add(result);
       }
       return results;
     }
 
-    private BasicResult Encode(string source, TokenTable table)
+    private BasicResult Encode(string source, TokenTable table, int seed)
     {
       if(string.IsNullOrEmpty(source))
       {
@@ -69,15 +70,30 @@ namespace tokenizr.net.service
 
       var result = new StringBuilder();
 
-      var columnIndex = 0;
-      if(!_settings.Consistent)
+      int columnIndex = 0;
+
+      switch(_settings.Behaviour)
       {
-        var maximum = table.Count - 1;
-        columnIndex = source.Length;
-        while (columnIndex > maximum)
-        {
-          columnIndex-=maximum;
-        }
+        case Behaviour.Consistent:
+          columnIndex = 0;
+          break;
+
+        case Behaviour.LengthBasedInconsistent:
+          var maximum = table.Count - 1;
+          columnIndex = source.Length;
+          while (columnIndex > maximum)
+          {
+            columnIndex -= maximum;
+          }
+          break;
+
+        case Behaviour.RandomSeedInconsistent:
+          if (seed == -1)
+          {
+            seed = ThreadSafeRandom.ThisThreadsRandom.Next(0, table.Count - 1);
+          }
+          columnIndex = seed;
+          break;
       }
 
       var replacedCount = 0;
@@ -122,7 +138,7 @@ namespace tokenizr.net.service
 
       var percentReplaced = ((double)replacedCount / source.Length) * 100;
 
-      return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentReplaced = percentReplaced };
+      return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentReplaced = percentReplaced, Seed = seed };
     }
 
     private static void CheckMaskMatch(string source, StringBuilder result, int i, MaskItem maskItem)

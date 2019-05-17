@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using tokenizr.net.random;
 
 namespace tokenizr.net.generator
 {

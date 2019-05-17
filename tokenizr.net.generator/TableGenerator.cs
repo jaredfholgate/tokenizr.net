@@ -3,6 +3,7 @@ using tokenizr.net.structures;
 using System.Collections.Generic;
 using System.Linq;
 using tokenizr.net.constants;
+using tokenizr.net.random;
 
 namespace tokenizr.net.generator
 {

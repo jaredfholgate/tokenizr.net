@@ -47,7 +47,7 @@ namespace tokenizr.net.service.unittests
     }
 
     [TestMethod]
-    public void CanDeTokeniseABasicStringInNonConsistentModeAndActionTypeIsCorrect()
+    public void CanDeTokeniseABasicStringInLengthBasedInconsistentModeAndActionTypeIsCorrect()
     {
       var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new ServiceSettings());
@@ -61,10 +61,24 @@ namespace tokenizr.net.service.unittests
     }
 
     [TestMethod]
+    public void CanDeTokeniseABasicStringInRandomSeedInconsistentModeAndActionTypeIsCorrect()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.English);
+      var service = new BasicService(new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent });
+      var result = service.Tokenize(TestString1, tokenTable);
+      Assert.AreEqual(ActionType.Tokenize, result.Action);
+      var resultString = result.Value;
+      result = service.Detokenize(resultString, tokenTable, result.Seed);
+      resultString = result.Value;
+      Assert.AreEqual(ActionType.Detokenize, result.Action);
+      Assert.AreEqual(TestString1, resultString);
+    }
+
+    [TestMethod]
     public void CanDeTokeniseABasicStringInConsistentMode()
     {
       var tokenTable = GenerateTable(Size, Alphabet.English);
-      var service = new BasicService(new ServiceSettings{ Consistent = true });
+      var service = new BasicService(new ServiceSettings{ Behaviour = Behaviour.Consistent });
       var resultString = service.Tokenize(TestString1, tokenTable).Value;
       resultString = service.Detokenize(resultString, tokenTable).Value;
       Assert.AreEqual(TestString1, resultString);
@@ -74,7 +88,7 @@ namespace tokenizr.net.service.unittests
     public void StartOfStringIsConsistentWhenInConsistentMode()
     {
       var tokenTable = GenerateTable(Size, Alphabet.English);
-      var service = new BasicService(new ServiceSettings { Consistent = true });
+      var service = new BasicService(new ServiceSettings { Behaviour = Behaviour.Consistent });
 
       var resultString1 = service.Tokenize(TestString1, tokenTable).Value;
       var resultString2 = service.Tokenize(TestString2, tokenTable).Value;
@@ -86,10 +100,25 @@ namespace tokenizr.net.service.unittests
     }
 
     [TestMethod]
-    public void StartOfStringIsNotConsistentWhenNotInConsistentMode()
+    public void StartOfStringIsNotConsistentWhenInLengthBasedConsistentMode()
     {
       var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new ServiceSettings());
+
+      var resultString1 = service.Tokenize(TestString1, tokenTable).Value;
+      var resultString2 = service.Tokenize(TestString2, tokenTable).Value;
+      var resultString3 = service.Tokenize(TestString3, tokenTable).Value;
+
+      Assert.IsFalse(resultString2.StartsWith(resultString1));
+      Assert.IsFalse(resultString3.StartsWith(resultString1));
+      Assert.IsFalse(resultString3.StartsWith(resultString2));
+    }
+
+    [TestMethod]
+    public void StartOfStringIsNotConsistentWhenInRandomSeedInconsistentMode()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.English);
+      var service = new BasicService(new ServiceSettings() { Behaviour = Behaviour.LengthBasedInconsistent });
 
       var resultString1 = service.Tokenize(TestString1, tokenTable).Value;
       var resultString2 = service.Tokenize(TestString2, tokenTable).Value;

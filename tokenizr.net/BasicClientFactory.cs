@@ -34,11 +34,11 @@ namespace tokenizr.net
       switch(basicClientType)
       {
         case BasicClientType.BasicEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size }, new ServiceSettings() { Consistent = consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
           break;
 
         case BasicClientType.FullEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Consistent = consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
           break;
 
         case BasicClientType.BasicNumbers:
@@ -50,7 +50,7 @@ namespace tokenizr.net
           break;
 
         case BasicClientType.FullUnicode:
-            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = 100 }, new ServiceSettings() { Consistent = consistent });
+            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = 100 }, new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent });
             break;
 
       }

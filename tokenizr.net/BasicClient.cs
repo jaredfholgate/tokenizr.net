@@ -1,4 +1,5 @@
-﻿using tokenizr.net.compression;
+﻿using System;
+using tokenizr.net.compression;
 using tokenizr.net.generator;
 using tokenizr.net.serialisation;
 using tokenizr.net.service;
@@ -50,9 +51,13 @@ namespace tokenizr.net
       return _basicService.Tokenize(stringToTokenize, _tokenTableSet);
     }
 
-    public BasicResult Detokenize(string stringToDetokenize)
+    public BasicResult Detokenize(string stringToDetokenize, int seed = -1)
     {
-      return _basicService.Detokenize(stringToDetokenize, _tokenTableSet);
+      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && seed == -1)
+      {
+        throw new ArgumentException("A valid seed is required to detonkenize a token created using Random Seed tokenization.");
+      }
+      return _basicService.Detokenize(stringToDetokenize, _tokenTableSet, seed);
     }
 
     public string Serialise(string encryptionKey)

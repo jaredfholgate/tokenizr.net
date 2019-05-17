@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
 
 namespace tokenizr.net.unittests
@@ -79,19 +80,35 @@ namespace tokenizr.net.unittests
     {
         var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode);
         var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
-        var result = client.Tokenize(testString).Value;
+        var result = client.Tokenize(testString);
+        var resultString = result.Value;
 
-        Assert.AreNotEqual(testString, result);
-        for (int i = 0; i < result.Length; i++)
+        Assert.AreNotEqual(testString, resultString);
+        for (int i = 0; i < resultString.Length; i++)
         {
-           Assert.AreNotEqual(testString[i], result[i]);
+           Assert.AreNotEqual(testString[i], resultString[i]);
         }
-        result = client.Detokenize(result).Value;
+        resultString = client.Detokenize(resultString, result.Seed).Value;
 
-        Assert.AreEqual(testString, result);
+        Assert.AreEqual(testString, resultString);
     }
 
+    [TestMethod]
+    public void ThrowsAnExceptionWithAFullUnicodeBasicClientAndNoSeedForDetokenise()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode);
+      var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
+      var result = client.Tokenize(testString);
+      var resultString = result.Value;
 
+      Assert.AreNotEqual(testString, resultString);
+      for (int i = 0; i < resultString.Length; i++)
+      {
+        Assert.AreNotEqual(testString[i], resultString[i]);
+      }
+      Assert.ThrowsException<ArgumentException>(() => resultString = client.Detokenize(resultString).Value, "A valid seed is required to detonkenize a token created using Random Seed tokenization.");
+    }
+    
     [TestMethod]
     public void CanSerliaseAndDeserialiseClient()
     {
