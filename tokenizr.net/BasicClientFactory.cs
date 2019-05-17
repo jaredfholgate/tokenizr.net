@@ -29,28 +29,29 @@ namespace tokenizr.net
     /// <returns>A BasicClient with common settings.</returns>
     public static BasicClient GetClient(BasicClientType basicClientType, bool consistent = false)
     {
-      var size = 2048;
+      var largeSize = 2048;
+      var smallSize = 100;
       BasicClient basicClient = null;
       switch(basicClientType)
       {
         case BasicClientType.BasicEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = largeSize }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
           break;
 
         case BasicClientType.FullEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = size, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = largeSize, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
           break;
 
         case BasicClientType.BasicNumbers:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = size }, new ServiceSettings());
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = largeSize }, new ServiceSettings());
           break;
 
         case BasicClientType.CreditCard:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = size }, new ServiceSettings() { Mask = Mask.Parse("{{4*}}-{{4*}}-{{4*}}-{{4^}}") });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = largeSize }, new ServiceSettings() { Mask = Mask.Parse("{{4*}}-{{4*}}-{{4*}}-{{4^}}") });
           break;
 
         case BasicClientType.FullUnicode:
-            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = 100 }, new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent });
+            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = smallSize }, new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent });
             break;
 
       }
