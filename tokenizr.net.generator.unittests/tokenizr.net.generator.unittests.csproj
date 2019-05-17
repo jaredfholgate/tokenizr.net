@@ -16,6 +16,7 @@
     <ProjectReference Include="..\tokenizr.net.constants\tokenizr.net.constants.csproj" />
     <ProjectReference Include="..\tokenizr.net.generator\tokenizr.net.generator.csproj" />
     <ProjectReference Include="..\tokenizr.net.structures\tokenizr.net.structures.csproj" />
+    <ProjectReference Include="..\tokenizr.net.unicode\tokenizr.net.unicode.csproj" />
   </ItemGroup>
 
 </Project>

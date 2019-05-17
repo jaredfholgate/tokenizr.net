@@ -8,6 +8,7 @@ namespace tokenizr.net.generator.unittests
   public class TableGeneratorTests
   {
     private const int Size2048 = 2048;
+    private const int Size100 = 100;
     private const string EnglishWithPunctuationAndSpecialCharacters = Alphabet.English + Characters.Punctuation + Characters.SpecialCharacters;
     private const string EnglishWithSpacesPunctuationAndSpecialCharacters = Alphabet.English + Characters.Space + Characters.Punctuation + Characters.SpecialCharacters;
 
@@ -80,8 +81,7 @@ namespace tokenizr.net.generator.unittests
         }
       }
     }
-
-
+    
     [TestMethod]
     public void CanCreateAForwardAndReverseTableWithALengthOf2048AndNumbers()
     {
@@ -96,6 +96,23 @@ namespace tokenizr.net.generator.unittests
           Assert.IsTrue(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item1 == character);
           Assert.AreEqual(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item2, table.ForwardTable[i][character].Item2);
           Assert.IsTrue(char.IsDigit(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item1));
+        }
+      }
+    }
+
+    [TestMethod]
+    public void CanCreateAForwardAndReverseTableWithALengthOf100AndFullUnicode()
+    {
+      var characters = new unicode.Generator().Generate();
+      var table = new TableGenerator(new GeneratorSettings { Size = Size100, CharacterArray = characters }).Generate();
+      Assert.AreEqual(Size100, table.ReverseTable.Count);
+
+      for (var i = 0; i < Size100; i++)
+      {
+        foreach (var character in characters)
+        {
+          Assert.IsTrue(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item1 == character);
+          Assert.AreEqual(table.ReverseTable[i][table.ForwardTable[i][character].Item1].Item2, table.ForwardTable[i][character].Item2);
         }
       }
     }
