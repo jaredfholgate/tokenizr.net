@@ -25,9 +25,10 @@ namespace tokenizr.net
     /// Instantiate a BasicClient with set of common defaults. Use this class as an example for more customised setups.
     /// </summary>
     /// <param name="basicClientType">The common defaults to apply.</param>
-    /// <param name="Consistent">Whether the toeknisation will be conistent or more randomised. Choose consistent if you want to search on partial words or phrases at the start of a string.</param>
+    /// <param name="behaviour">Whether the tokenisation will be conistent or more randomised. Choose consistent if you want to search on partial words or phrases at the start of a string.</param>
+    /// <param name="cycles">The number of cycles of tokenizatuion to run. More cycles is more secure, but more processor intensive.</param>
     /// <returns>A BasicClient with common settings.</returns>
-    public static BasicClient GetClient(BasicClientType basicClientType, bool consistent = false)
+    public static BasicClient GetClient(BasicClientType basicClientType, Behaviour behaviour = Behaviour.LengthBasedInconsistent, int cycles = 256)
     {
       var largeSize = 2048;
       var smallSize = 100;
@@ -35,23 +36,23 @@ namespace tokenizr.net
       switch(basicClientType)
       {
         case BasicClientType.BasicEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = largeSize }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = largeSize }, new ServiceSettings() { Behaviour = behaviour, Cycles = cycles });
           break;
 
         case BasicClientType.FullEnglish:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = largeSize, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Behaviour = Behaviour.Consistent });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.English, Size = largeSize, IncludeSpaces = true, IncludePunctuation = true, IncludeSpecialCharacters = true }, new ServiceSettings() { Behaviour = behaviour, Cycles = cycles });
           break;
 
         case BasicClientType.BasicNumbers:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = largeSize }, new ServiceSettings());
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = largeSize }, new ServiceSettings() { Behaviour = behaviour, Cycles = cycles });
           break;
 
         case BasicClientType.CreditCard:
-          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = largeSize }, new ServiceSettings() { Mask = Mask.Parse("{{4*}}-{{4*}}-{{4*}}-{{4^}}") });
+          basicClient = new BasicClient(new GeneratorSettings() { CharacterString = Alphabet.Numbers, Size = largeSize }, new ServiceSettings() { Behaviour = behaviour, Cycles = cycles, Mask = Mask.Parse("{{4*}}-{{4*}}-{{4*}}-{{4^}}") });
           break;
 
         case BasicClientType.FullUnicode:
-            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = smallSize }, new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent });
+            basicClient = new BasicClient(new GeneratorSettings() { CharacterArray = new unicode.Generator().Generate(), Size = smallSize }, new ServiceSettings() { Behaviour = behaviour, Cycles = cycles });
             break;
 
       }

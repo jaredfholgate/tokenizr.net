@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using tokenizr.net.service;
 
 namespace tokenizr.net.unittests
 {
@@ -78,7 +79,7 @@ namespace tokenizr.net.unittests
     [TestMethod]
     public void CanGenerateAFullUnicodeBasicClient()
     {
-        var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode);
+        var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent);
         var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
         var result = client.Tokenize(testString);
         var resultString = result.Value;
@@ -96,7 +97,7 @@ namespace tokenizr.net.unittests
     [TestMethod]
     public void ThrowsAnExceptionWithAFullUnicodeBasicClientAndNoSeedForDetokenise()
     {
-      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode);
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent);
       var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
       var result = client.Tokenize(testString);
       var resultString = result.Value;
