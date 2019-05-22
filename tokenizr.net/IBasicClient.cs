@@ -6,9 +6,9 @@ namespace tokenizr.net
 {
   public interface IBasicClient
   {
-    BasicResult Detokenize(string stringToDetokenize, List<int> seed = null);
-    BasicResult Tokenize(string stringToTokenize);
-    Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize);
-    Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize);
+    BasicResult Detokenize(string stringToDetokenize, List<int> seed = null, bool encrypted = false);
+    BasicResult Tokenize(string stringToTokenize, bool encrypted = false);
+    Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize, bool encrypted = false);
+    Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize, bool encrypted = false);
   }
 }

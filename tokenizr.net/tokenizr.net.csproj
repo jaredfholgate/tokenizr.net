@@ -19,8 +19,9 @@
   <ItemGroup>
     <ProjectReference Include="..\tokenizr.net.compression\tokenizr.net.compression.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\tokenizr.net.constants\tokenizr.net.constants.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\tokenizr.net.encryption\tokenizr.net.encryption.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\tokenizr.net.generator\tokenizr.net.generator.csproj" PrivateAssets="all" />
-    <ProjectReference Include="..\tokenizr.net.random\tokenizr.net.random.csproj"  PrivateAssets="all" />
+    <ProjectReference Include="..\tokenizr.net.random\tokenizr.net.random.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\tokenizr.net.serialisation\tokenizr.net.serialisation.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\tokenizr.net.service\tokenizr.net.service.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\tokenizr.net.structures\tokenizr.net.structures.csproj" PrivateAssets="all" />

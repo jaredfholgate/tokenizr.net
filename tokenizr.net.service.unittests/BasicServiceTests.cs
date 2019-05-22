@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using tokenizr.net.constants;
+using tokenizr.net.encryption;
 using tokenizr.net.generator;
 using tokenizr.net.structures;
 
@@ -19,6 +20,8 @@ namespace tokenizr.net.service.unittests
     private const string TestStringHalfReplaced = "Hello,,,,,";
     private const string TestStringNoneReplaced = ",,,";
     private const string TestNumbers = "4324-5098-1542-6579-0978-5382";
+    private const string Key = "dfkjhsdi8y8w9efyiuwhfp8wef8we";
+    private const string IV = "dsdfsdfsdfsdfsd";
 
     [TestMethod]
     public void CanTokeniseABasicString()
@@ -70,6 +73,20 @@ namespace tokenizr.net.service.unittests
       Assert.AreEqual(ActionType.Tokenize, result.Action);
       var resultString = result.Value;
       result = service.Detokenize(new BasicRequest(resultString, result.Seed), tokenTable);
+      resultString = result.Value;
+      Assert.AreEqual(ActionType.Detokenize, result.Action);
+      Assert.AreEqual(TestString1, resultString);
+    }
+
+    [TestMethod]
+    public void CanDeTokeniseABasicStringInRandomSeedInconsistentModeAndEncrypted()
+    {
+      var tokenTable = GenerateTable(Size, Alphabet.English);
+      var service = new BasicService(new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent, Key = Key, IV = IV }, new Encryption());
+      var result = service.Tokenize(TestString1, tokenTable, true);
+      Assert.AreEqual(ActionType.Tokenize, result.Action);
+      var resultString = result.Value;
+      result = service.Detokenize(new BasicRequest(resultString), tokenTable, true);
       resultString = result.Value;
       Assert.AreEqual(ActionType.Detokenize, result.Action);
       Assert.AreEqual(TestString1, resultString);

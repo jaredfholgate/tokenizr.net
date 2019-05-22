@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using tokenizr.net.compression;
+using tokenizr.net.encryption;
 using tokenizr.net.generator;
 using tokenizr.net.serialisation;
 using tokenizr.net.service;
@@ -16,13 +17,13 @@ namespace tokenizr.net
     private readonly ISerialisation _serialisation;
     private readonly ICompression _compression;
     private readonly TokenTableSet _tokenTableSet;
-       
-    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings), new Serialisation(), new Compression(), null)
+        
+    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings, new Encryption()), new Serialisation(), new Compression(), null)
     {
 
     }
 
-    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings, TokenTableSet tokenTableSet) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings), new Serialisation(), new Compression(), tokenTableSet)
+    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings, TokenTableSet tokenTableSet) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings, new Encryption()), new Serialisation(), new Compression(), tokenTableSet)
     {
 
     }
@@ -48,28 +49,32 @@ namespace tokenizr.net
       return _tableGenerator.Generate();
     }
 
-    public BasicResult Tokenize(string stringToTokenize)
+    public BasicResult Tokenize(string stringToTokenize, bool encrypt = false)
     {
-      return _basicService.Tokenize(stringToTokenize, _tokenTableSet);
+      return _basicService.Tokenize(stringToTokenize, _tokenTableSet, encrypt);
     }
 
-    public async Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize)
+    public async Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize, bool encrypt = false)
     {
-      return await _basicService.TokenizeAsync(stringsToTokenize, _tokenTableSet);
+      return await _basicService.TokenizeAsync(stringsToTokenize, _tokenTableSet, encrypt);
     }
 
-    public BasicResult Detokenize(string stringToDetokenize, List<int> seed = null)
+    public BasicResult Detokenize(string stringToDetokenize, List<int> seed = null, bool encrypted = false)
     {
-      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && seed == null)
+      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && seed == null && encrypted == false)
       {
         throw new ArgumentException("A valid seed is required to detonkenize a token created using Random Seed tokenization.");
       }
-      return _basicService.Detokenize(new BasicRequest(stringToDetokenize, seed), _tokenTableSet);
+      return _basicService.Detokenize(new BasicRequest(stringToDetokenize, seed), _tokenTableSet, encrypted);
     }
 
-    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize)
+    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize, bool encrypted = false)
     {
-      return await _basicService.DetokenizeAsync(stringsToDetokenize, _tokenTableSet);
+      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && stringsToDetokenize[0].Seed == null && encrypted == false)
+      {
+        throw new ArgumentException("A valid seed is required to detonkenize a token created using Random Seed tokenization.");
+      }
+      return await _basicService.DetokenizeAsync(stringsToDetokenize, _tokenTableSet, encrypted);
     }
 
     public string Serialise(string encryptionKey)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tokenizr.net.constants;
+using tokenizr.net.encryption;
 using tokenizr.net.random;
 using tokenizr.net.structures;
 
@@ -13,10 +14,16 @@ namespace tokenizr.net.service
   public class BasicService : IBasicService
   {
     private readonly IServiceSettings _settings;
+    private readonly IEncryption _encryption;
 
-    public BasicService(IServiceSettings settings)
+    public BasicService(IServiceSettings settings, IEncryption encryption = null)
     {
       _settings = settings;
+      _encryption = encryption;
+      if (!string.IsNullOrWhiteSpace(settings.Key))
+      {
+        _encryption.SetKeyAndIv(settings.Key, settings.IV);
+      }
     }
 
     public IServiceSettings GetSettings()
@@ -24,11 +31,11 @@ namespace tokenizr.net.service
       return _settings;
     }
 
-    public BasicResult Tokenize(string source, TokenTableSet table)
+    public BasicResult Tokenize(string source, TokenTableSet table, bool encrypt = false)
     {
       try
       {
-        return TokenizeAsync(new List<string> { source }, table).Result[0];
+        return TokenizeAsync(new List<string> { source }, table, encrypt).Result[0];
       }
       catch(Exception ex)
       {
@@ -36,11 +43,11 @@ namespace tokenizr.net.service
       }
     }
 
-    public BasicResult Detokenize(BasicRequest request, TokenTableSet table)
+    public BasicResult Detokenize(BasicRequest request, TokenTableSet table, bool encrypted = false)
     {
       try
       {
-        return DetokenizeAsync(new List<BasicRequest> { request }, table).Result[0];
+        return DetokenizeAsync(new List<BasicRequest> { request }, table, encrypted).Result[0];
       }
       catch (Exception ex)
       {
@@ -48,25 +55,25 @@ namespace tokenizr.net.service
       }
     }
 
-    public async Task<List<BasicResult>> TokenizeAsync(List<string> sources, TokenTableSet table)
+    public async Task<List<BasicResult>> TokenizeAsync(List<string> sources, TokenTableSet table, bool encrypt = false)
     {
       var results = new ConcurrentBag<BasicResult>();
       var tasks = new List<Task>();
       foreach (var source in sources)
       {
-        tasks.Add(TokenizeString(table, results, source));
+        tasks.Add(TokenizeString(table, results, source, encrypt));
       }
       await Task.WhenAll(tasks);
       return results.ToList();
     }
        
-    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> requests, TokenTableSet table)
+    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> requests, TokenTableSet table, bool encrypted = false)
     {
       var results = new ConcurrentBag<BasicResult>();
       var tasks = new List<Task>();
       foreach (var request in requests)
       {
-        tasks.Add(DetokenizeString(table, results, request));
+        tasks.Add(DetokenizeString(table, results, request, encrypted));
       }
       await Task.WhenAll(tasks);
       return results.ToList();
@@ -84,14 +91,23 @@ namespace tokenizr.net.service
       return result;
     }
 
-    private async Task TokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, string source)
+    private async Task TokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, string source, bool encrypt)
     {
       var seeds = new List<int>();
       var result = new BasicResult { Value = source };
       result = await Task.Run(() => TokenizeCycle(table, seeds, result));
       result.Action = ActionType.Tokenize;
-      result.Seed = seeds;
+      
       result.SourceValue = source;
+      if(encrypt)
+      {
+        var seed = string.Join("|", seeds);
+        result.Value = _encryption.EncryptString(seed + "[ENDSEED]" + result.Value);
+      }
+      else
+      {
+        result.Seed = seeds;
+      }
       results.Add(result);
     }
 
@@ -105,8 +121,16 @@ namespace tokenizr.net.service
       return result;
     }
 
-    private async Task DetokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, BasicRequest request)
+    private async Task DetokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, BasicRequest request, bool encrypted)
     {
+      if(encrypted)
+      {
+        var decrypted = _encryption.DecryptString(request.Source);
+        var split = decrypted.Split(new[] { "[ENDSEED]" }, StringSplitOptions.None);
+        request.Seed = split[0].Split('|').Select(o => Convert.ToInt32(o)).ToList();
+        request.Source = split[1];
+      }
+
       if (request.Seed != null)
       {
         request.Seed.Reverse();

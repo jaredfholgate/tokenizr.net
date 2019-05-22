@@ -5,5 +5,7 @@
     Behaviour Behaviour { get; set; }
     Mask Mask { get; set; }
     int Cycles { get; set; }
+    string Key { get; set; }
+    string IV { get; set; }
   }
 }
