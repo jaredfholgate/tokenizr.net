@@ -114,7 +114,7 @@ namespace tokenizr.net.unittests
 
       stopwatch.Stop();
       Console.WriteLine(stopwatch.Elapsed);
-      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 2000);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
     }
 
     [TestMethod]
@@ -139,7 +139,7 @@ namespace tokenizr.net.unittests
 
       stopwatch.Stop();
       Console.WriteLine(stopwatch.Elapsed);
-      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 2000);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
     }
 
     [TestMethod]
