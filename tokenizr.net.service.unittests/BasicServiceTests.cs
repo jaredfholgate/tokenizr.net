@@ -54,7 +54,7 @@ namespace tokenizr.net.service.unittests
       var result = service.Tokenize(TestString1, tokenTable);
       Assert.AreEqual(ActionType.Tokenize, result.Action);
       var resultString = result.Value;
-      result = service.Detokenize(resultString, tokenTable);
+      result = service.Detokenize(new BasicRequest(resultString), tokenTable);
       resultString = result.Value;
       Assert.AreEqual(ActionType.Detokenize, result.Action);
       Assert.AreEqual(TestString1, resultString);
@@ -68,7 +68,7 @@ namespace tokenizr.net.service.unittests
       var result = service.Tokenize(TestString1, tokenTable);
       Assert.AreEqual(ActionType.Tokenize, result.Action);
       var resultString = result.Value;
-      result = service.Detokenize(resultString, tokenTable, result.Seed);
+      result = service.Detokenize(new BasicRequest(resultString, result.Seed), tokenTable);
       resultString = result.Value;
       Assert.AreEqual(ActionType.Detokenize, result.Action);
       Assert.AreEqual(TestString1, resultString);
@@ -80,7 +80,7 @@ namespace tokenizr.net.service.unittests
       var tokenTable = GenerateTable(Size, Alphabet.English);
       var service = new BasicService(new ServiceSettings{ Behaviour = Behaviour.Consistent });
       var resultString = service.Tokenize(TestString1, tokenTable).Value;
-      resultString = service.Detokenize(resultString, tokenTable).Value;
+      resultString = service.Detokenize(new BasicRequest(resultString), tokenTable).Value;
       Assert.AreEqual(TestString1, resultString);
     }
 
@@ -370,7 +370,7 @@ namespace tokenizr.net.service.unittests
       }
 
       var results = service.Tokenize(testStrings, tokenTable);
-      results = service.Detokenize(results.Select(o => o.Value).ToList(), tokenTable);
+      results = service.Detokenize(results.Select(o => new BasicRequest(o.Value)).ToList(), tokenTable);
       for(var i = 0; i < testStrings.Count; i++)
       {
         Assert.AreEqual(testStrings[i], results[i].Value);

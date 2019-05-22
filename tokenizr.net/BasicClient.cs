@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using tokenizr.net.compression;
 using tokenizr.net.generator;
 using tokenizr.net.serialisation;
@@ -51,13 +53,23 @@ namespace tokenizr.net
       return _basicService.Tokenize(stringToTokenize, _tokenTableSet);
     }
 
-    public BasicResult Detokenize(string stringToDetokenize, int seed = -1)
+    public async Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize)
     {
-      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && seed == -1)
+      return await _basicService.TokenizeAsync(stringsToTokenize, _tokenTableSet);
+    }
+
+    public BasicResult Detokenize(string stringToDetokenize, List<int> seed = null)
+    {
+      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && seed == null)
       {
         throw new ArgumentException("A valid seed is required to detonkenize a token created using Random Seed tokenization.");
       }
-      return _basicService.Detokenize(stringToDetokenize, _tokenTableSet, seed);
+      return _basicService.Detokenize(new BasicRequest(stringToDetokenize, seed), _tokenTableSet);
+    }
+
+    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize)
+    {
+      return await _basicService.DetokenizeAsync(stringsToDetokenize, _tokenTableSet);
     }
 
     public string Serialise(string encryptionKey)

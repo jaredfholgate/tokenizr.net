@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using tokenizr.net.service;
 
@@ -92,6 +94,52 @@ namespace tokenizr.net.unittests
         resultString = client.Detokenize(resultString, result.Seed).Value;
 
         Assert.AreEqual(testString, resultString);
+    }
+
+    [TestMethod]
+    public void PerformanceTestAFullUnicodeBasicClientTokenizeAsync()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent);
+      var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
+      var testStrings = new List<string>();
+      for (var i = 0; i < 1000; i++)
+      {
+        testStrings.Add(testString + i);
+      }
+
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      var resultT = client.TokenizeAsync(testStrings).Result;
+
+      stopwatch.Stop();
+      Console.WriteLine(stopwatch.Elapsed);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 2000);
+    }
+
+    [TestMethod]
+    public void PerformanceTestAFullUnicodeBasicClientDetonkenizeAsync()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent);
+      var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
+      var testStrings = new List<string>();
+      for (var i = 0; i < 1000; i++)
+      {
+        testStrings.Add(testString + i);
+      }
+
+      var resultT = client.TokenizeAsync(testStrings).Result;
+
+      var testRequests = resultT.Select(o => new BasicRequest { Source = o.Value, Seed = o.Seed }).ToList();
+
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      var resultD = client.DetokenizeAsync(testRequests).Result;
+
+      stopwatch.Stop();
+      Console.WriteLine(stopwatch.Elapsed);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 2000);
     }
 
     [TestMethod]

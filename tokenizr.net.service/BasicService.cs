@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using tokenizr.net.constants;
 using tokenizr.net.random;
 using tokenizr.net.structures;
@@ -25,42 +26,114 @@ namespace tokenizr.net.service
       return Tokenize(new List<string> { source }, table)[0];
     }
 
-    public BasicResult Detokenize(string source, TokenTableSet table, int seed = -1)
+    public BasicResult Detokenize(BasicRequest request, TokenTableSet table)
     {
-      return Detokenize(new List<string> { source }, table, seed)[0];
+      return Detokenize(new List<BasicRequest> { request }, table)[0];
     }
 
     public List<BasicResult> Tokenize(List<string> sources, TokenTableSet table)
     {
       var results = new List<BasicResult>();
-      int seed = GetSeed(table.ForwardTable.Count);
+      
       foreach (var source in sources)
       {
+        var seeds = new List<int>();
         var result = new BasicResult { Value = source };
         for (int i = 0; i < _settings.Cycles; i++)
         {
-          result = Encode(result.Value, table.ForwardTable, seed);
+          var currentSeed = GetSeed(table.ForwardTable.Count);
+          result = Encode(result.Value, table.ForwardTable, currentSeed);
+          seeds.Add(currentSeed);
         }
         result.Action = ActionType.Tokenize;
+        result.Seed = seeds;
         results.Add(result);
       }
       return results;
     }
-        
-    public List<BasicResult> Detokenize(List<string> sources, TokenTableSet table, int seed = -1)
+         
+    public List<BasicResult> Detokenize(List<BasicRequest> requests, TokenTableSet table)
     {
       var results = new List<BasicResult>();
-      foreach (var source in sources)
+      foreach (var request in requests)
       {
-        var result = new BasicResult { Value = source };
-        for (int i = 0; i < _settings.Cycles; i++)
+        if (request.Seed != null)
         {
-          result = Encode(result.Value, table.ReverseTable, seed);
+          request.Seed.Reverse();
         }
+        var result = new BasicResult { Value = request.Source };
+        result = DetokeniseCycle(table, request, result);
         result.Action = ActionType.Detokenize;
         results.Add(result);
       }
       return results;
+    }
+
+    public async Task<List<BasicResult>> TokenizeAsync(List<string> sources, TokenTableSet table)
+    {
+      var results = new List<BasicResult>();
+      var tasks = new List<Task>();
+      foreach (var source in sources)
+      {
+        tasks.Add(TokenizeString(table, results, source));
+      }
+      await Task.WhenAll(tasks);
+      return results;
+    }
+       
+    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> requests, TokenTableSet table)
+    {
+      var results = new List<BasicResult>();
+      var tasks = new List<Task>();
+      foreach (var request in requests)
+      {
+        tasks.Add(DetokenizeString(table, results, request));
+      }
+      await Task.WhenAll(tasks);
+      return results;
+    }
+        private async Task TokenizeString(TokenTableSet table, List<BasicResult> results, string source)
+    {
+      var seeds = new List<int>();
+      var result = new BasicResult { Value = source };
+      result = await Task.Run(() => TokenizeCycle(table, seeds, result));
+      result.Action = ActionType.Tokenize;
+      result.Seed = seeds;
+      results.Add(result);
+    }
+
+    private BasicResult TokenizeCycle(TokenTableSet table, List<int> seeds, BasicResult result)
+    {
+      for (int i = 0; i < _settings.Cycles; i++)
+      {
+        var currentSeed = GetSeed(table.ForwardTable.Count);
+        result = Encode(result.Value, table.ForwardTable, currentSeed);
+        seeds.Add(currentSeed);
+      }
+
+      return result;
+    }
+
+    private BasicResult DetokeniseCycle(TokenTableSet table, BasicRequest request, BasicResult result)
+    {
+      for (int i = 0; i < _settings.Cycles; i++)
+      {
+        result = Encode(result.Value, table.ReverseTable, request.Seed == null ? -1 : request.Seed[i]);
+      }
+
+      return result;
+    }
+
+    private async Task DetokenizeString(TokenTableSet table, List<BasicResult> results, BasicRequest request)
+    {
+      if (request.Seed != null)
+      {
+        request.Seed.Reverse();
+      }
+      var result = new BasicResult { Value = request.Source };
+      result = await Task.Run(() => DetokeniseCycle(table, request, result));
+      result.Action = ActionType.Detokenize;
+      results.Add(result);
     }
 
     private BasicResult Encode(string source, TokenTable table, int seed)
@@ -118,7 +191,7 @@ namespace tokenizr.net.service
 
       var percentReplaced = ((double)replacedCount / source.Length) * 100;
 
-      return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentReplaced = percentReplaced, Seed = seed };
+      return new BasicResult { Value = result.ToString(), AllTextReplaced = percentReplaced == 100, PercentReplaced = percentReplaced };
     }
 
     private int SetupColumnIndex(string source, TokenTable table, int seed)
@@ -171,7 +244,7 @@ namespace tokenizr.net.service
         throw new System.Exception($"Mask is set to MustMatchAndKeep does not match. Expected: {maskItem.Match} Found: {source[i]}");
       }
     }
-        private int GetSeed(int tableLength)
+    private int GetSeed(int tableLength)
     {
       var seed = -1;
       if (_settings.Behaviour == Behaviour.RandomSeedInconsistent)

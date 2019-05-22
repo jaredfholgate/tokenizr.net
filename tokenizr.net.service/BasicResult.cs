@@ -1,4 +1,6 @@
-﻿namespace tokenizr.net.service
+﻿using System.Collections.Generic;
+
+namespace tokenizr.net.service
 {
   public class BasicResult
   {
@@ -10,6 +12,6 @@
 
     public string Value { get; set; }
 
-    public int Seed { get; set; }
+    public List<int> Seed { get; set; }
   }
 }
