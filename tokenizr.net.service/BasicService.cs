@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tokenizr.net.constants;
@@ -23,74 +26,50 @@ namespace tokenizr.net.service
 
     public BasicResult Tokenize(string source, TokenTableSet table)
     {
-      return Tokenize(new List<string> { source }, table)[0];
+      try
+      {
+        return TokenizeAsync(new List<string> { source }, table).Result[0];
+      }
+      catch(Exception ex)
+      {
+        throw ex.InnerException;
+      }
     }
 
     public BasicResult Detokenize(BasicRequest request, TokenTableSet table)
     {
-      return Detokenize(new List<BasicRequest> { request }, table)[0];
-    }
-
-    public List<BasicResult> Tokenize(List<string> sources, TokenTableSet table)
-    {
-      var results = new List<BasicResult>();
-      
-      foreach (var source in sources)
+      try
       {
-        var seeds = new List<int>();
-        var result = new BasicResult { Value = source };
-        for (int i = 0; i < _settings.Cycles; i++)
-        {
-          var currentSeed = GetSeed(table.ForwardTable.Count);
-          result = Encode(result.Value, table.ForwardTable, currentSeed);
-          seeds.Add(currentSeed);
-        }
-        result.Action = ActionType.Tokenize;
-        result.Seed = seeds;
-        results.Add(result);
+        return DetokenizeAsync(new List<BasicRequest> { request }, table).Result[0];
       }
-      return results;
-    }
-         
-    public List<BasicResult> Detokenize(List<BasicRequest> requests, TokenTableSet table)
-    {
-      var results = new List<BasicResult>();
-      foreach (var request in requests)
+      catch (Exception ex)
       {
-        if (request.Seed != null)
-        {
-          request.Seed.Reverse();
-        }
-        var result = new BasicResult { Value = request.Source };
-        result = DetokeniseCycle(table, request, result);
-        result.Action = ActionType.Detokenize;
-        results.Add(result);
+        throw ex.InnerException;
       }
-      return results;
     }
 
     public async Task<List<BasicResult>> TokenizeAsync(List<string> sources, TokenTableSet table)
     {
-      var results = new List<BasicResult>();
+      var results = new ConcurrentBag<BasicResult>();
       var tasks = new List<Task>();
       foreach (var source in sources)
       {
         tasks.Add(TokenizeString(table, results, source));
       }
       await Task.WhenAll(tasks);
-      return results;
+      return results.ToList();
     }
        
     public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> requests, TokenTableSet table)
     {
-      var results = new List<BasicResult>();
+      var results = new ConcurrentBag<BasicResult>();
       var tasks = new List<Task>();
       foreach (var request in requests)
       {
         tasks.Add(DetokenizeString(table, results, request));
       }
       await Task.WhenAll(tasks);
-      return results;
+      return results.ToList();
     }
     
     private BasicResult TokenizeCycle(TokenTableSet table, List<int> seeds, BasicResult result)
@@ -105,7 +84,7 @@ namespace tokenizr.net.service
       return result;
     }
 
-    private async Task TokenizeString(TokenTableSet table, List<BasicResult> results, string source)
+    private async Task TokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, string source)
     {
       var seeds = new List<int>();
       var result = new BasicResult { Value = source };
@@ -126,7 +105,7 @@ namespace tokenizr.net.service
       return result;
     }
 
-    private async Task DetokenizeString(TokenTableSet table, List<BasicResult> results, BasicRequest request)
+    private async Task DetokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, BasicRequest request)
     {
       if (request.Seed != null)
       {

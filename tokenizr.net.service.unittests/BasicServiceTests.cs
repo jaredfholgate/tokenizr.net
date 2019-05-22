@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using tokenizr.net.constants;
@@ -279,7 +280,7 @@ namespace tokenizr.net.service.unittests
       var tokenTable = GenerateTable(Size, Alphabet.Numbers);
       var mask = "****-****-****-****-****-^^^";
       var service = new BasicService(new ServiceSettings { Mask = Mask.Parse(mask) });
-      var exception = Assert.ThrowsException<System.Exception>(() => service.Tokenize(TestNumbers, tokenTable));
+      var exception = Assert.ThrowsException<Exception>(() => service.Tokenize(TestNumbers, tokenTable));
       Assert.AreEqual("Mask Length does not match the source string length.", exception.Message);
     }
 
@@ -289,7 +290,7 @@ namespace tokenizr.net.service.unittests
       var tokenTable = GenerateTable(Size, Alphabet.Numbers);
       var mask = "****-****-****-****-*****-^^^";
       var service = new BasicService(new ServiceSettings { Mask = Mask.Parse(mask) });
-      var exception = Assert.ThrowsException<System.Exception>(() => service.Tokenize(TestNumbers, tokenTable));
+      var exception = Assert.ThrowsException<Exception>(() => service.Tokenize(TestNumbers, tokenTable));
       Assert.AreEqual("Mask is set to MustMatchAndKeep does not match. Expected: - Found: 5", exception.Message);
     }
 
@@ -369,11 +370,11 @@ namespace tokenizr.net.service.unittests
         testStrings.Add(TestString1 + i.ToString());
       }
 
-      var results = service.Tokenize(testStrings, tokenTable);
-      results = service.Detokenize(results.Select(o => new BasicRequest(o.Value)).ToList(), tokenTable);
+      var results = service.TokenizeAsync(testStrings, tokenTable).Result;
+      results = service.DetokenizeAsync(results.Select(o => new BasicRequest(o.Value)).ToList(), tokenTable).Result;
       for(var i = 0; i < testStrings.Count; i++)
       {
-        Assert.AreEqual(testStrings[i], results[i].Value);
+        Assert.IsTrue(results.Any(o => o.Value == testStrings[i]));
       }
     }
 
