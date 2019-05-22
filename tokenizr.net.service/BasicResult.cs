@@ -12,6 +12,8 @@ namespace tokenizr.net.service
 
     public string Value { get; set; }
 
+    public string SourceValue { get; set; }
+
     public List<int> Seed { get; set; }
   }
 }

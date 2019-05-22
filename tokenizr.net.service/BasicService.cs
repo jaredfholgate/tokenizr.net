@@ -92,16 +92,7 @@ namespace tokenizr.net.service
       await Task.WhenAll(tasks);
       return results;
     }
-        private async Task TokenizeString(TokenTableSet table, List<BasicResult> results, string source)
-    {
-      var seeds = new List<int>();
-      var result = new BasicResult { Value = source };
-      result = await Task.Run(() => TokenizeCycle(table, seeds, result));
-      result.Action = ActionType.Tokenize;
-      result.Seed = seeds;
-      results.Add(result);
-    }
-
+    
     private BasicResult TokenizeCycle(TokenTableSet table, List<int> seeds, BasicResult result)
     {
       for (int i = 0; i < _settings.Cycles; i++)
@@ -112,6 +103,17 @@ namespace tokenizr.net.service
       }
 
       return result;
+    }
+
+    private async Task TokenizeString(TokenTableSet table, List<BasicResult> results, string source)
+    {
+      var seeds = new List<int>();
+      var result = new BasicResult { Value = source };
+      result = await Task.Run(() => TokenizeCycle(table, seeds, result));
+      result.Action = ActionType.Tokenize;
+      result.Seed = seeds;
+      result.SourceValue = source;
+      results.Add(result);
     }
 
     private BasicResult DetokeniseCycle(TokenTableSet table, BasicRequest request, BasicResult result)
@@ -133,6 +135,7 @@ namespace tokenizr.net.service
       var result = new BasicResult { Value = request.Source };
       result = await Task.Run(() => DetokeniseCycle(table, request, result));
       result.Action = ActionType.Detokenize;
+      result.SourceValue = request.Source;
       results.Add(result);
     }
 
