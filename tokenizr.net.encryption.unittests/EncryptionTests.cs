@@ -16,7 +16,7 @@ namespace tokenizr.net.encryption.unittests
       encryption.SetKeyAndIv(Key, IV);
 
       var result = encryption.EncryptString(test);
-      Assert.AreEqual("n0R5icIeFngnX0iT+6FIBs93p/JSBzbwFqh5ogSJn/M=", result);
+      Assert.AreEqual("NyJlDMn21FbsPrPHpYREWABIvLfOAYzoseFFpPH/NQDq44TIW0kLZIiVm1VtO+x7b2vRspOckVyQLWIDpr9Xiw==", result);
     }
 
     [TestMethod]
