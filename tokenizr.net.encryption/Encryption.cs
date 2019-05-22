@@ -27,21 +27,16 @@ namespace tokenizr.net.encryption
 
     public string EncryptString(string stringToEncrypt)
     {
-      var doubleArray = stringToEncrypt.Select(c => (int)c).ToArray();
-      //var test = new String(doubleArray.Select(o => (char)o).ToArray());
-      var flatArray = string.Join("|", doubleArray);
-      var bytes = EncryptStringToBytes(flatArray);
-      var result = Convert.ToBase64String(bytes);
-      return result;
+      var bytes = EncryptStringToBytes(stringToEncrypt);
+      var encryptedString = Convert.ToBase64String(bytes);
+      return encryptedString;
     }
 
     public string DecryptString(string stringToDecrypt)
     {
       var bytes = Convert.FromBase64String(stringToDecrypt);
-      var flatArray = DecryptStringFromBytes(bytes);
-      var doubleArray = flatArray.Split('|').Select(o => Convert.ToInt32(o)).ToArray();
-      var unicodeString = new String(doubleArray.Select(o => (char)o).ToArray());
-      return unicodeString;
+      var decryptedString = DecryptStringFromBytes(bytes);
+      return decryptedString;
     }
 
     private byte[] EncryptStringToBytes(string plainText)

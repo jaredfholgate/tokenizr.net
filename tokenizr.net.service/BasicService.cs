@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tokenizr.net.compression;
 using tokenizr.net.constants;
 using tokenizr.net.encryption;
 using tokenizr.net.random;
@@ -15,11 +16,13 @@ namespace tokenizr.net.service
   {
     private readonly IServiceSettings _settings;
     private readonly IEncryption _encryption;
+    private readonly ICompression _compression;
 
-    public BasicService(IServiceSettings settings, IEncryption encryption = null)
+    public BasicService(IServiceSettings settings, IEncryption encryption = null, ICompression compression = null)
     {
       _settings = settings;
       _encryption = encryption;
+      _compression = compression;
       if (!string.IsNullOrWhiteSpace(settings.Key))
       {
         _encryption.SetKeyAndIv(settings.Key, settings.IV);
@@ -97,18 +100,27 @@ namespace tokenizr.net.service
       var result = new BasicResult { Value = source };
       result = await Task.Run(() => TokenizeCycle(table, seeds, result));
       result.Action = ActionType.Tokenize;
-      
+
       result.SourceValue = source;
-      if(encrypt)
+      Encrypt(encrypt, seeds, result);
+      results.Add(result);
+    }
+
+    private void Encrypt(bool encrypt, List<int> seeds, BasicResult result)
+    {
+      if (encrypt)
       {
         var seed = string.Join("|", seeds);
-        result.Value = _encryption.EncryptString(seed + "[ENDSEED]" + result.Value);
+        var fullString = seed + "[ENDSEED]" + result.Value;
+        var doubleArray = fullString.Select(c => (int)c).ToArray();
+        var flatArray = string.Join("|", doubleArray);
+        var compressedFlatArray = _compression.Compress(flatArray);
+        result.Value = _encryption.EncryptString(compressedFlatArray);
       }
       else
       {
         result.Seed = seeds;
       }
-      results.Add(result);
     }
 
     private BasicResult DetokeniseCycle(TokenTableSet table, BasicRequest request, BasicResult result)
@@ -123,13 +135,7 @@ namespace tokenizr.net.service
 
     private async Task DetokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, BasicRequest request, bool encrypted)
     {
-      if(encrypted)
-      {
-        var decrypted = _encryption.DecryptString(request.Source);
-        var split = decrypted.Split(new[] { "[ENDSEED]" }, StringSplitOptions.None);
-        request.Seed = split[0].Split('|').Select(o => Convert.ToInt32(o)).ToList();
-        request.Source = split[1];
-      }
+      Decrypt(request, encrypted);
 
       if (request.Seed != null)
       {
@@ -140,6 +146,20 @@ namespace tokenizr.net.service
       result.Action = ActionType.Detokenize;
       result.SourceValue = request.Source;
       results.Add(result);
+    }
+
+    private void Decrypt(BasicRequest request, bool encrypted)
+    {
+      if (encrypted)
+      {
+        var compressedFlatArray = _encryption.DecryptString(request.Source);
+        var flatArray = _compression.Decompress(compressedFlatArray);
+        var doubleArray = flatArray.Split('|').Select(o => Convert.ToInt32(o)).ToArray();
+        var unicodeString = new String(doubleArray.Select(o => (char)o).ToArray());
+        var split = unicodeString.Split(new[] { "[ENDSEED]" }, StringSplitOptions.None);
+        request.Seed = split[0].Split('|').Select(o => Convert.ToInt32(o)).ToList();
+        request.Source = split[1];
+      }
     }
 
     private BasicResult Encode(string source, TokenTable table, int seed)

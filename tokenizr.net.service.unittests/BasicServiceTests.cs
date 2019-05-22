@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using tokenizr.net.compression;
 using tokenizr.net.constants;
 using tokenizr.net.encryption;
 using tokenizr.net.generator;
@@ -82,7 +83,7 @@ namespace tokenizr.net.service.unittests
     public void CanDeTokeniseABasicStringInRandomSeedInconsistentModeAndEncrypted()
     {
       var tokenTable = GenerateTable(Size, Alphabet.English);
-      var service = new BasicService(new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent, Key = Key, IV = IV }, new Encryption());
+      var service = new BasicService(new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent, Key = Key, IV = IV }, new Encryption(), new Compression());
       var result = service.Tokenize(TestString1, tokenTable, true);
       Assert.AreEqual(ActionType.Tokenize, result.Action);
       var resultString = result.Value;

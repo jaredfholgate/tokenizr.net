@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\tokenizr.net.compression\tokenizr.net.compression.csproj" />
     <ProjectReference Include="..\tokenizr.net.constants\tokenizr.net.constants.csproj" />
     <ProjectReference Include="..\tokenizr.net.encryption\tokenizr.net.encryption.csproj" />
     <ProjectReference Include="..\tokenizr.net.random\tokenizr.net.random.csproj" />
