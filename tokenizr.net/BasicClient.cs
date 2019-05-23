@@ -49,32 +49,32 @@ namespace tokenizr.net
       return _tableGenerator.Generate();
     }
 
-    public BasicResult Tokenize(string stringToTokenize, bool encrypt = false)
+    public BasicResult Tokenize(string stringToTokenize)
     {
-      return _basicService.Tokenize(stringToTokenize, _tokenTableSet, encrypt);
+      return _basicService.Tokenize(stringToTokenize, _tokenTableSet);
     }
 
-    public async Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize, bool encrypt = false)
+    public async Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize)
     {
-      return await _basicService.TokenizeAsync(stringsToTokenize, _tokenTableSet, encrypt);
+      return await _basicService.TokenizeAsync(stringsToTokenize, _tokenTableSet);
     }
 
-    public BasicResult Detokenize(string stringToDetokenize, List<int> seed = null, bool encrypted = false)
+    public BasicResult Detokenize(BasicRequest request)
     {
-      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && seed == null && encrypted == false)
+      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && request.Seed == null && _basicService.GetSettings().Encrypt == false)
       {
         throw new ArgumentException("A valid seed is required to detonkenize a token created using Random Seed tokenization.");
       }
-      return _basicService.Detokenize(new BasicRequest(stringToDetokenize, seed), _tokenTableSet, encrypted);
+      return _basicService.Detokenize(request, _tokenTableSet);
     }
 
-    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize, bool encrypted = false)
+    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize)
     {
-      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && stringsToDetokenize[0].Seed == null && encrypted == false)
+      if (_basicService.GetSettings().Behaviour == Behaviour.RandomSeedInconsistent && stringsToDetokenize[0].Seed == null && _basicService.GetSettings().Encrypt == false)
       {
         throw new ArgumentException("A valid seed is required to detonkenize a token created using Random Seed tokenization.");
       }
-      return await _basicService.DetokenizeAsync(stringsToDetokenize, _tokenTableSet, encrypted);
+      return await _basicService.DetokenizeAsync(stringsToDetokenize, _tokenTableSet);
     }
 
     public string Serialise(string encryptionKey)

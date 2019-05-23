@@ -83,11 +83,11 @@ namespace tokenizr.net.service.unittests
     public void CanDeTokeniseABasicStringInRandomSeedInconsistentModeAndEncrypted()
     {
       var tokenTable = GenerateTable(Size, Alphabet.English);
-      var service = new BasicService(new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent, Key = Key, IV = IV }, new Encryption(), new Compression());
-      var result = service.Tokenize(TestString1, tokenTable, true);
+      var service = new BasicService(new ServiceSettings() { Behaviour = Behaviour.RandomSeedInconsistent, Encrypt = true, Key = Key, IV = IV }, new Encryption(), new Compression());
+      var result = service.Tokenize(TestString1, tokenTable);
       Assert.AreEqual(ActionType.Tokenize, result.Action);
       var resultString = result.Value;
-      result = service.Detokenize(new BasicRequest(resultString), tokenTable, true);
+      result = service.Detokenize(new BasicRequest(resultString), tokenTable);
       resultString = result.Value;
       Assert.AreEqual(ActionType.Detokenize, result.Action);
       Assert.AreEqual(TestString1, resultString);

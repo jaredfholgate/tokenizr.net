@@ -10,6 +10,7 @@
     public Behaviour Behaviour { get; set; }
     public Mask Mask { get; set; }
     public int Cycles { get; set; }
+    public bool Encrypt { get; set; }
     public string Key { get; set; }
     public string IV { get; set; }
   }

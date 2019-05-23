@@ -17,5 +17,9 @@ namespace tokenizr.net.service
     }
     public string Source { get; set; }
     public List<int> Seed { get; set; }
+    public static BasicRequest FromString(string source)
+    {
+      return new BasicRequest(source);
+    }
   }
 }

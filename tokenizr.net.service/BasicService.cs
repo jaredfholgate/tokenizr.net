@@ -34,11 +34,11 @@ namespace tokenizr.net.service
       return _settings;
     }
 
-    public BasicResult Tokenize(string source, TokenTableSet table, bool encrypt = false)
+    public BasicResult Tokenize(string source, TokenTableSet table)
     {
       try
       {
-        return TokenizeAsync(new List<string> { source }, table, encrypt).Result[0];
+        return TokenizeAsync(new List<string> { source }, table).Result[0];
       }
       catch(Exception ex)
       {
@@ -46,11 +46,11 @@ namespace tokenizr.net.service
       }
     }
 
-    public BasicResult Detokenize(BasicRequest request, TokenTableSet table, bool encrypted = false)
+    public BasicResult Detokenize(BasicRequest request, TokenTableSet table)
     {
       try
       {
-        return DetokenizeAsync(new List<BasicRequest> { request }, table, encrypted).Result[0];
+        return DetokenizeAsync(new List<BasicRequest> { request }, table).Result[0];
       }
       catch (Exception ex)
       {
@@ -58,25 +58,25 @@ namespace tokenizr.net.service
       }
     }
 
-    public async Task<List<BasicResult>> TokenizeAsync(List<string> sources, TokenTableSet table, bool encrypt = false)
+    public async Task<List<BasicResult>> TokenizeAsync(List<string> sources, TokenTableSet table)
     {
       var results = new ConcurrentBag<BasicResult>();
       var tasks = new List<Task>();
       foreach (var source in sources)
       {
-        tasks.Add(TokenizeString(table, results, source, encrypt));
+        tasks.Add(TokenizeString(table, results, source));
       }
       await Task.WhenAll(tasks);
       return results.ToList();
     }
        
-    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> requests, TokenTableSet table, bool encrypted = false)
+    public async Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> requests, TokenTableSet table)
     {
       var results = new ConcurrentBag<BasicResult>();
       var tasks = new List<Task>();
       foreach (var request in requests)
       {
-        tasks.Add(DetokenizeString(table, results, request, encrypted));
+        tasks.Add(DetokenizeString(table, results, request));
       }
       await Task.WhenAll(tasks);
       return results.ToList();
@@ -94,7 +94,7 @@ namespace tokenizr.net.service
       return result;
     }
 
-    private async Task TokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, string source, bool encrypt)
+    private async Task TokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, string source)
     {
       var seeds = new List<int>();
       var result = new BasicResult { Value = source };
@@ -102,13 +102,13 @@ namespace tokenizr.net.service
       result.Action = ActionType.Tokenize;
 
       result.SourceValue = source;
-      Encrypt(encrypt, seeds, result);
+      Encrypt(seeds, result);
       results.Add(result);
     }
 
-    private void Encrypt(bool encrypt, List<int> seeds, BasicResult result)
+    private void Encrypt(List<int> seeds, BasicResult result)
     {
-      if (encrypt)
+      if (_settings.Encrypt)
       {
         var seed = string.Join("|", seeds);
         var fullString = seed + "[ENDSEED]" + result.Value;
@@ -133,9 +133,9 @@ namespace tokenizr.net.service
       return result;
     }
 
-    private async Task DetokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, BasicRequest request, bool encrypted)
+    private async Task DetokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, BasicRequest request)
     {
-      Decrypt(request, encrypted);
+      Decrypt(request);
 
       if (request.Seed != null)
       {
@@ -148,9 +148,9 @@ namespace tokenizr.net.service
       results.Add(result);
     }
 
-    private void Decrypt(BasicRequest request, bool encrypted)
+    private void Decrypt(BasicRequest request)
     {
-      if (encrypted)
+      if (_settings.Encrypt)
       {
         var compressedFlatArray = _encryption.DecryptString(request.Source);
         var flatArray = _compression.Decompress(compressedFlatArray);

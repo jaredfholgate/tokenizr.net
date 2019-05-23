@@ -29,7 +29,7 @@ namespace tokenizr.net.unittests
         }
       }
 
-      result = client.Detokenize(result).Value;
+      result = client.Detokenize(BasicRequest.FromString(result)).Value;
       Assert.AreEqual(testString, result);
     }
 
@@ -47,7 +47,7 @@ namespace tokenizr.net.unittests
           Assert.AreEqual(testString[i], result[i]);
         }
       }
-      result = client.Detokenize(result).Value;
+      result = client.Detokenize(BasicRequest.FromString(result)).Value;
       Assert.AreEqual(testString, result);
     }
 
@@ -59,7 +59,7 @@ namespace tokenizr.net.unittests
       var result = client.Tokenize(testString).Value;
       Assert.AreNotEqual(testString, result);
 
-      result = client.Detokenize(result).Value;
+      result = client.Detokenize(BasicRequest.FromString(result)).Value;
       Assert.AreEqual(testString, result);
     }
 
@@ -77,7 +77,7 @@ namespace tokenizr.net.unittests
           Assert.AreEqual(testString[i], result[i]);
         }
       }
-      result = client.Detokenize(result).Value;
+      result = client.Detokenize(BasicRequest.FromString(result)).Value;
       Assert.AreEqual(testString, result);
     }
 
@@ -94,7 +94,7 @@ namespace tokenizr.net.unittests
         {
            Assert.AreNotEqual(testString[i], resultString[i]);
         }
-        resultString = client.Detokenize(resultString, result.Seed).Value;
+        resultString = client.Detokenize(new BasicRequest(resultString, result.Seed)).Value;
 
         Assert.AreEqual(testString, resultString);
     }
@@ -116,6 +116,12 @@ namespace tokenizr.net.unittests
       var resultT = client.TokenizeAsync(testStrings).Result;
 
       stopwatch.Stop();
+
+      foreach (var test in testStrings)
+      {
+        Assert.IsTrue(!resultT.Any(o => o.Value == test));
+      }
+
       Console.WriteLine(stopwatch.Elapsed);
       Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
     }
@@ -123,7 +129,7 @@ namespace tokenizr.net.unittests
     [TestMethod]
     public void PerformanceTestAFullUnicodeBasicClientTokenizeAsyncWithEncryption()
     {
-      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, key: Key, iv: IV);
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, encrypt: true, key: Key, iv: IV);
       var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
       var testStrings = new List<string>();
       for (var i = 0; i < 1000; i++)
@@ -134,9 +140,15 @@ namespace tokenizr.net.unittests
       var stopwatch = new Stopwatch();
       stopwatch.Start();
 
-      var resultT = client.TokenizeAsync(testStrings, true).Result;
+      var resultT = client.TokenizeAsync(testStrings).Result;
 
       stopwatch.Stop();
+
+      foreach (var test in testStrings)
+      {
+        Assert.IsTrue(!resultT.Any(o => o.Value == test));
+      }
+
       Console.WriteLine(stopwatch.Elapsed);
       Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
     }
@@ -177,7 +189,7 @@ namespace tokenizr.net.unittests
     [TestMethod]
     public void PerformanceTestAFullUnicodeBasicClientDetonkenizeAsyncWithEncryption()
     {
-      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, key: Key, iv: IV);
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, encrypt: true, key: Key, iv: IV);
       var testString = "Hello, this is a test string.";
       var testStrings = new List<string>();
       for (var i = 0; i < 1000; i++)
@@ -185,14 +197,14 @@ namespace tokenizr.net.unittests
         testStrings.Add(testString + i);
       }
 
-      var resultT = client.TokenizeAsync(testStrings, true).Result;
+      var resultT = client.TokenizeAsync(testStrings).Result;
 
       var testRequests = resultT.Select(o => new BasicRequest { Source = o.Value }).ToList();
 
       var stopwatch = new Stopwatch();
       stopwatch.Start();
 
-      var resultD = client.DetokenizeAsync(testRequests, true).Result;
+      var resultD = client.DetokenizeAsync(testRequests).Result;
 
       stopwatch.Stop();
 
@@ -218,7 +230,7 @@ namespace tokenizr.net.unittests
       {
         Assert.AreNotEqual(testString[i], resultString[i]);
       }
-      Assert.ThrowsException<ArgumentException>(() => resultString = client.Detokenize(resultString).Value, "A valid seed is required to detonkenize a token created using Random Seed tokenization.");
+      Assert.ThrowsException<ArgumentException>(() => resultString = client.Detokenize(BasicRequest.FromString(resultString)).Value, "A valid seed is required to detonkenize a token created using Random Seed tokenization.");
     }
     
     [TestMethod]
@@ -234,7 +246,7 @@ namespace tokenizr.net.unittests
       var result2 = client.Tokenize(testString).Value;
       Assert.AreEqual(result1, result2);
 
-      result2 = client.Detokenize(result2).Value;
+      result2 = client.Detokenize(BasicRequest.FromString(result2)).Value;
       Assert.AreEqual(testString, result2);
 
     }
