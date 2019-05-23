@@ -26,7 +26,7 @@ namespace tokenizr.net
     /// </summary>
     CreditCard,
     /// <summary>
-    /// Every unicode character for every language, with all numbers, punctuation and special characters
+    /// Every unicode character for every language, with all numbers, punctuation and special characters.
     /// </summary>
     FullUnicode
   }

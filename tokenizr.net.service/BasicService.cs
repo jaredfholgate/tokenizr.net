@@ -82,17 +82,7 @@ namespace tokenizr.net.service
       return results.ToList();
     }
     
-    private BasicResult TokenizeCycle(TokenTableSet table, List<int> seeds, BasicResult result)
-    {
-      for (int i = 0; i < _settings.Cycles; i++)
-      {
-        var currentSeed = GetSeed(table.ForwardTable.Count);
-        result = Encode(result.Value, table.ForwardTable, currentSeed);
-        seeds.Add(currentSeed);
-      }
-
-      return result;
-    }
+   
 
     private async Task TokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, string source)
     {
@@ -104,6 +94,28 @@ namespace tokenizr.net.service
       result.SourceValue = source;
       Encrypt(seeds, result);
       results.Add(result);
+    }
+
+    private BasicResult TokenizeCycle(TokenTableSet table, List<int> seeds, BasicResult result)
+    {
+      var currentSeed = -1;
+      if (_settings.Behaviour == Behaviour.RandomSeedInconsistent && !_settings.SeedPerCycle)
+      {
+        currentSeed = GetSeed(table.ForwardTable.Count);
+        seeds.Add(currentSeed);
+      }
+
+      for (int i = 0; i < _settings.Cycles; i++)
+      {
+        if (_settings.Behaviour == Behaviour.RandomSeedInconsistent && _settings.SeedPerCycle)
+        {
+          currentSeed = GetSeed(table.ForwardTable.Count);
+          seeds.Add(currentSeed);
+        }
+        result = Encode(result.Value, table.ForwardTable, currentSeed);
+      }
+
+      return result;
     }
 
     private void Encrypt(List<int> seeds, BasicResult result)
@@ -123,16 +135,6 @@ namespace tokenizr.net.service
       }
     }
 
-    private BasicResult DetokeniseCycle(TokenTableSet table, BasicRequest request, BasicResult result)
-    {
-      for (int i = 0; i < _settings.Cycles; i++)
-      {
-        result = Encode(result.Value, table.ReverseTable, request.Seed == null ? -1 : request.Seed[i]);
-      }
-
-      return result;
-    }
-
     private async Task DetokenizeString(TokenTableSet table, ConcurrentBag<BasicResult> results, BasicRequest request)
     {
       Decrypt(request);
@@ -146,6 +148,27 @@ namespace tokenizr.net.service
       result.Action = ActionType.Detokenize;
       result.SourceValue = request.Source;
       results.Add(result);
+    }
+
+    private BasicResult DetokeniseCycle(TokenTableSet table, BasicRequest request, BasicResult result)
+    {
+      var seed = -1;
+      if (_settings.Behaviour == Behaviour.RandomSeedInconsistent && !_settings.SeedPerCycle)
+      {
+        seed = request.Seed[0];
+      }
+
+      for (int i = 0; i < _settings.Cycles; i++)
+      {
+        if(_settings.Behaviour == Behaviour.RandomSeedInconsistent && _settings.SeedPerCycle)
+        {
+          seed = request.Seed[i];
+        }
+
+        result = Encode(result.Value, table.ReverseTable, seed);
+      }
+
+      return result;
     }
 
     private void Decrypt(BasicRequest request)

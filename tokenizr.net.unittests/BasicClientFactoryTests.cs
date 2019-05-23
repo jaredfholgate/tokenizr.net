@@ -218,6 +218,124 @@ namespace tokenizr.net.unittests
     }
 
     [TestMethod]
+    public void PerformanceTestAFullUnicodeBasicClientTokenizeAsyncSeedPerCycle()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, seedPerCycle: true);
+      var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
+      var testStrings = new List<string>();
+      for (var i = 0; i < 1000; i++)
+      {
+        testStrings.Add(testString + i);
+      }
+
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      var resultT = client.TokenizeAsync(testStrings).Result;
+
+      stopwatch.Stop();
+
+      foreach (var test in testStrings)
+      {
+        Assert.IsTrue(!resultT.Any(o => o.Value == test));
+      }
+
+      Console.WriteLine(stopwatch.Elapsed);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
+    }
+
+    [TestMethod]
+    public void PerformanceTestAFullUnicodeBasicClientTokenizeAsyncWithEncryptionSeedPerCycle()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, seedPerCycle: true, encrypt: true, key: Key, iv: IV);
+      var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎˢ˦ϛφϡϠ؅قـؼᵬᵾᶦᾑᾤבּ꭛ﻻ⽪⾀";
+      var testStrings = new List<string>();
+      for (var i = 0; i < 1000; i++)
+      {
+        testStrings.Add(testString + i);
+      }
+
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      var resultT = client.TokenizeAsync(testStrings).Result;
+
+      stopwatch.Stop();
+
+      foreach (var test in testStrings)
+      {
+        Assert.IsTrue(!resultT.Any(o => o.Value == test));
+      }
+
+      Console.WriteLine(stopwatch.Elapsed);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
+    }
+
+    [TestMethod]
+    public void PerformanceTestAFullUnicodeBasicClientDetonkenizeAsyncSeedPerCycle()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, seedPerCycle: true);
+      var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎ";
+      var testStrings = new List<string>();
+      for (var i = 0; i < 1000; i++)
+      {
+        var postFix = i.ToString();
+        var test = string.Concat(testString, postFix);
+        testStrings.Add(test);
+      }
+
+      var resultT = client.TokenizeAsync(testStrings).Result;
+
+      var testRequests = resultT.Select(o => new BasicRequest { Source = o.Value, Seed = o.Seed }).ToList();
+
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      var resultD = client.DetokenizeAsync(testRequests).Result;
+
+      stopwatch.Stop();
+
+      foreach (var test in testStrings)
+      {
+        Assert.IsTrue(resultD.Any(o => o.Value == test));
+      }
+
+      Console.WriteLine(stopwatch.Elapsed);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
+    }
+
+    [TestMethod]
+    public void PerformanceTestAFullUnicodeBasicClientDetonkenizeAsyncWithEncryptionSeedPerCycle()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent, seedPerCycle:true, encrypt: true, key: Key, iv: IV);
+      var testString = "Hello, this is a test string.";
+      var testStrings = new List<string>();
+      for (var i = 0; i < 1000; i++)
+      {
+        testStrings.Add(testString + i);
+      }
+
+      var resultT = client.TokenizeAsync(testStrings).Result;
+
+      var testRequests = resultT.Select(o => new BasicRequest { Source = o.Value }).ToList();
+
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      var resultD = client.DetokenizeAsync(testRequests).Result;
+
+      stopwatch.Stop();
+
+      foreach (var test in testStrings)
+      {
+        Assert.IsTrue(resultD.Any(o => o.Value == test));
+      }
+
+      Console.WriteLine(stopwatch.Elapsed);
+      Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10000);
+    }
+
+    [TestMethod]
     public void ThrowsAnExceptionWithAFullUnicodeBasicClientAndNoSeedForDetokenise()
     {
       var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode, Behaviour.RandomSeedInconsistent);
