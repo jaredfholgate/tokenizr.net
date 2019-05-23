@@ -356,11 +356,12 @@ namespace tokenizr.net.unittests
     {
       var client = BasicClientFactory.GetClient(BasicClientType.FullEnglish);
       var testString = "abc,def,ghi,123???{{}}";
-      var encryptionKey = "TestKey";
+      var key = "sdagdafghrtrte453tg34tdfhfdshdf34t34b45EQhfghjhgfrtyeghRWEW9234r";
+      var iv = "fdg54g45yTHR54y45yG45g4g";
       var result1 = client.Tokenize(testString).Value;
-      var serliasedClient = client.Serialise(encryptionKey);
+      var serliasedClient = client.Serialise(key, iv);
 
-      client = new BasicClientFactory().Deserialise(encryptionKey, serliasedClient);
+      client = new BasicClientFactory().Deserialise(key, iv, serliasedClient);
       var result2 = client.Tokenize(testString).Value;
       Assert.AreEqual(result1, result2);
 

@@ -10,5 +10,6 @@ namespace tokenizr.net
     BasicResult Tokenize(string stringToTokenize);
     Task<List<BasicResult>> DetokenizeAsync(List<BasicRequest> stringsToDetokenize);
     Task<List<BasicResult>> TokenizeAsync(List<string> stringsToTokenize);
+    string Serialise(string key, string iv);
   }
 }

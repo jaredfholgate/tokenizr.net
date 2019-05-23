@@ -3,6 +3,7 @@ using tokenizr.net.generator;
 using tokenizr.net.service;
 using tokenizr.net.compression;
 using tokenizr.net.serialisation;
+using tokenizr.net.encryption;
 
 namespace tokenizr.net
 {
@@ -10,15 +11,17 @@ namespace tokenizr.net
   {
     private readonly ISerialisation _serialisation;
     private readonly ICompression _compression;
+    private readonly IEncryption _encryption;
 
-    public BasicClientFactory() : this(new Serialisation(), new Compression())
+    public BasicClientFactory() : this(new Serialisation(), new Compression(), new Encryption())
     {
     }
 
-    public BasicClientFactory(ISerialisation serialisation, ICompression compression)
+    public BasicClientFactory(ISerialisation serialisation, ICompression compression, IEncryption encryption)
     {
       _serialisation = serialisation;
       _compression = compression;
+      _encryption = encryption;
     }
 
     /// <summary>
@@ -59,9 +62,10 @@ namespace tokenizr.net
       return basicClient;
     }
 
-    public BasicClient Deserialise(string encryptionKey, string client)
+    public BasicClient Deserialise(string key, string iv, string client)
     {
-      var serlizedBasicClient = _serialisation.Deserialise<SerlializedBasicClient>(_compression.Decompress(client));
+      _encryption.SetKeyAndIv(key, iv);
+      var serlizedBasicClient = _serialisation.Deserialise<SerlializedBasicClient>(_compression.Decompress(_encryption.DecryptString(client)));
       return new BasicClient(serlizedBasicClient.GeneratorSettings, serlizedBasicClient.ServiceSettings, serlizedBasicClient.TokenTable);
     }
   }

@@ -21,8 +21,10 @@ namespace tokenizr.net.encryption
       {
         throw new ArgumentNullException("IV is required");
       }
-      Key = Encoding.UTF8.GetBytes(key.PadLeft(32));
-      IV = Encoding.UTF8.GetBytes(iv.PadLeft(16));
+      key = key.Length <= 32 ? key.PadLeft(32,'a') : key.Substring(0, 32);
+      Key = Encoding.UTF8.GetBytes(key);
+      iv = iv.Length <= 16 ? iv.PadLeft(16, 'a') : iv.Substring(0, 16);
+      IV = Encoding.UTF8.GetBytes(iv);
     }
 
     public string EncryptString(string stringToEncrypt)

@@ -16,24 +16,26 @@ namespace tokenizr.net
     private readonly IBasicService _basicService;
     private readonly ISerialisation _serialisation;
     private readonly ICompression _compression;
+    private readonly IEncryption _encryption;
     private readonly TokenTableSet _tokenTableSet;
         
-    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings, new Encryption(), new Compression()), new Serialisation(), new Compression(), null)
+    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings, new Encryption(), new Compression()), new Serialisation(), new Compression(), new Encryption(), null)
     {
 
     }
 
-    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings, TokenTableSet tokenTableSet) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings, new Encryption(), new Compression()), new Serialisation(), new Compression(), tokenTableSet)
+    public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings, TokenTableSet tokenTableSet) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings, new Encryption(), new Compression()), new Serialisation(), new Compression(), new Encryption(), tokenTableSet)
     {
 
     }
 
-    public BasicClient(ITableGenerator tableGenerator, IBasicService basicService, ISerialisation serialisation, ICompression compression, TokenTableSet tokenTableSet)
+    public BasicClient(ITableGenerator tableGenerator, IBasicService basicService, ISerialisation serialisation, ICompression compression, IEncryption encryption, TokenTableSet tokenTableSet)
     {
       _tableGenerator = tableGenerator;
       _basicService = basicService;
       _serialisation = serialisation;
       _compression = compression;
+      _encryption = encryption;
       if (tokenTableSet == null)
       {
         _tokenTableSet = GenerateTokenTable();
@@ -77,7 +79,7 @@ namespace tokenizr.net
       return await _basicService.DetokenizeAsync(stringsToDetokenize, _tokenTableSet);
     }
 
-    public string Serialise(string encryptionKey)
+    public string Serialise(string key, string iv)
     {
       var serlizedBasicClient = new SerlializedBasicClient()
       {
@@ -85,7 +87,8 @@ namespace tokenizr.net
         GeneratorSettings = (GeneratorSettings)_tableGenerator.GetSettings(),
         ServiceSettings = (ServiceSettings)_basicService.GetSettings()
       };
-      return _compression.Compress(_serialisation.Serliaise(serlizedBasicClient));
+      _encryption.SetKeyAndIv(key, iv);
+      return _encryption.EncryptString(_compression.Compress(_serialisation.Serliaise(serlizedBasicClient)));
     }
   }
 }
