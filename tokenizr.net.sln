@@ -33,9 +33,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.unicode.unitte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.random", "tokenizr.net.random\tokenizr.net.random.csproj", "{6CE7E20E-C4C2-4191-8D83-B2EA0EF2869C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.encryption", "tokenizr.net.encryption\tokenizr.net.encryption.csproj", "{F011A687-325D-47CA-B0B9-3C10A7E684B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.encryption", "tokenizr.net.encryption\tokenizr.net.encryption.csproj", "{F011A687-325D-47CA-B0B9-3C10A7E684B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tokenizr.net.encryption.unittests", "tokenizr.net.encryption.unittests\tokenizr.net.encryption.unittests.csproj", "{7D31FFE7-C015-4532-AE6C-7646B6C5A0E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tokenizr.net.encryption.unittests", "tokenizr.net.encryption.unittests\tokenizr.net.encryption.unittests.csproj", "{7D31FFE7-C015-4532-AE6C-7646B6C5A0E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

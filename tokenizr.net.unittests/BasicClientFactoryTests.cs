@@ -367,7 +367,34 @@ namespace tokenizr.net.unittests
 
       result2 = client.Detokenize(BasicRequest.FromString(result2)).Value;
       Assert.AreEqual(testString, result2);
+    }
 
+    [TestMethod]
+    public void CanSerliaseAndDeserialiseFullUnicodeClient()
+    {
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode,Behaviour.RandomSeedInconsistent, seedPerCycle: true, key: Key, iv: IV, encrypt: true);
+      var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎ";
+      var key = "sdagdafghrtrte453tg34tdfhfdshdf34t34b45EQhfghjhgfrtyeghRWEW9234r";
+      var iv = "fdg54g45yTHR54y45yG45g4g";
+      var result1 = client.Tokenize(testString).Value;
+      var serliasedClient = client.Serialise(key, iv);
+
+      var client2 = new BasicClientFactory().Deserialise(key, iv, serliasedClient);
+
+      foreach(var character in client.Table.ForwardTable[1].Keys)
+      {
+        Assert.AreEqual(client.Table.ForwardTable[0][character].Item1, client2.Table.ForwardTable[0][character].Item1);
+      }
+
+      var result2 = client2.Tokenize(testString).Value;
+
+
+
+      result1 = client2.Detokenize(BasicRequest.FromString(result1)).Value;
+      result2 = client2.Detokenize(BasicRequest.FromString(result2)).Value;
+
+      Assert.AreEqual(testString, result1);
+      Assert.AreEqual(testString, result2);
     }
   }
 }

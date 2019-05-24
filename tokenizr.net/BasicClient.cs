@@ -18,6 +18,8 @@ namespace tokenizr.net
     private readonly ICompression _compression;
     private readonly IEncryption _encryption;
     private readonly TokenTableSet _tokenTableSet;
+
+    public TokenTableSet Table { get { return _tokenTableSet; } }
         
     public BasicClient(IGeneratorSettings generatorSettings, IServiceSettings serviceSettings) : this(new TableGenerator(generatorSettings), new BasicService(serviceSettings, new Encryption(), new Compression()), new Serialisation(), new Compression(), new Encryption(), null)
     {
