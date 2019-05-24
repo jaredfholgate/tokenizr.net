@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using tokenizr.net.constants;
 using tokenizr.net.generator;
 using tokenizr.net.structures;
@@ -15,7 +16,8 @@ namespace tokenizr.net.serialisation.unittests
       var generator = new TableGenerator(new GeneratorSettings { CharacterString = Alphabet.English, Size = 1000 });
       var table = generator.Generate();
       var result = serialiser.Serliaise(table);
-      var expectedText = "{\"ForwardTable\":[{\"a\":{\"Item1\":\"" + table.ForwardTable[0]['a'].Item1 + "\",\"Item2\":" + table.ForwardTable[0]['a'].Item2 + "},\"b\":{\"Item1\":\"" + table.ForwardTable[0]['b'].Item1 + "\",\"Item2\":" + table.ForwardTable[0]['b'].Item2 + "},";
+      var key = table.ForwardTable[0].Keys.ToList()[0];
+      var expectedText = "{\"ForwardTable\":{\"columns\":[{\"rows\":[{\"f\":" + (int)key + ",\"t\":" + (int)table.ForwardTable[0][key].Item1 + ",\"n\":" + table.ForwardTable[0][key].Item2 + "},";
       Assert.IsTrue(result.Contains(expectedText));
     }
 

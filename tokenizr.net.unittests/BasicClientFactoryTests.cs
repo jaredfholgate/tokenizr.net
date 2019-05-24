@@ -372,7 +372,7 @@ namespace tokenizr.net.unittests
     [TestMethod]
     public void CanSerliaseAndDeserialiseFullUnicodeClient()
     {
-      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode,Behaviour.RandomSeedInconsistent, seedPerCycle: true, key: Key, iv: IV, encrypt: true);
+      var client = BasicClientFactory.GetClient(BasicClientType.FullUnicode,Behaviour.RandomSeedInconsistent, tableSize: 10, seedPerCycle: true, key: Key, iv: IV, encrypt: true);
       var testString = "I was walking down the street and this happended! ÅßęœŖƢǆǢʥˎ";
       var key = "sdagdafghrtrte453tg34tdfhfdshdf34t34b45EQhfghjhgfrtyeghRWEW9234r";
       var iv = "fdg54g45yTHR54y45yG45g4g";
@@ -387,8 +387,6 @@ namespace tokenizr.net.unittests
       }
 
       var result2 = client2.Tokenize(testString).Value;
-
-
 
       result1 = client2.Detokenize(BasicRequest.FromString(result1)).Value;
       result2 = client2.Detokenize(BasicRequest.FromString(result2)).Value;
